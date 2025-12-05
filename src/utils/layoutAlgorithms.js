@@ -10,14 +10,14 @@ import { buildDependencyGraph } from './bayesianInference'
 /**
  * Simple Layered Layout Algorithm
  *
- * Groups nodes into horizontal layers based on their dependency level:
- * - Level 0: Nodes with no parents (root nodes)
- * - Level 1: Nodes whose parents are all in level 0
+ * Groups nodes into vertical layers based on their dependency level:
+ * - Level 0: Nodes with no parents (root nodes) - positioned at top
+ * - Level 1: Nodes whose parents are all in level 0 - positioned below
  * - Level N: Nodes whose parents are all in levels 0 to N-1
  *
- * Layout:
- * - Horizontal spacing: 250px between layers
- * - Vertical spacing: Distributed evenly within each layer
+ * Layout Direction: Top to Bottom (matches handle positions)
+ * - Vertical spacing: 150px between layers (top to bottom)
+ * - Horizontal spacing: Distributed evenly within each layer
  * - Starting position: (100, 100)
  *
  * @param {Array} nodes - React Flow nodes
@@ -68,8 +68,8 @@ export function simpleLayeredLayout(nodes, edges) {
   })
 
   // Layout parameters
-  const HORIZONTAL_SPACING = 250  // Distance between layers
-  const VERTICAL_SPACING = 120    // Minimum distance between nodes in same layer
+  const VERTICAL_SPACING = 150    // Distance between layers (top to bottom)
+  const HORIZONTAL_SPACING = 200  // Distance between nodes in same layer
   const START_X = 100
   const START_Y = 100
 
@@ -79,13 +79,13 @@ export function simpleLayeredLayout(nodes, edges) {
     const nodesInLevel = nodesByLevel[level]
     const indexInLevel = nodesInLevel.indexOf(node)
 
-    // Calculate X position based on level
-    const x = START_X + level * HORIZONTAL_SPACING
+    // Calculate Y position based on level (top to bottom)
+    const y = START_Y + level * VERTICAL_SPACING
 
-    // Calculate Y position - center the layer vertically
-    const totalHeight = (nodesInLevel.length - 1) * VERTICAL_SPACING
-    const startY = START_Y - totalHeight / 2
-    const y = startY + indexInLevel * VERTICAL_SPACING
+    // Calculate X position - center the layer horizontally
+    const totalWidth = (nodesInLevel.length - 1) * HORIZONTAL_SPACING
+    const startX = START_X + (nodesInLevel.length > 1 ? 0 : totalWidth / 2)
+    const x = startX + indexInLevel * HORIZONTAL_SPACING
 
     return {
       ...node,
@@ -113,7 +113,7 @@ export function simpleLayeredLayout(nodes, edges) {
 export const layoutAlgorithms = {
   simple: {
     name: 'Simple Layered',
-    description: 'Lightweight layer-based layout for DAGs',
+    description: 'Top-to-bottom layer-based layout for DAGs',
     algorithm: simpleLayeredLayout
   }
   // Future additions:
