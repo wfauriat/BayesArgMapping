@@ -12,7 +12,8 @@ import BayesianNode from './BayesianNode'
 import ConditionalEdge from './ConditionalEdge'
 import EditModal from './EditModal'
 import CPTModal from './CPTModal'
-import { propagateProbabilities, buildDependencyGraph } from '../utils/bayesianInference'
+import InterventionModal from './InterventionModal'
+import { propagateProbabilities, buildDependencyGraph, applyIntervention } from '../utils/bayesianInference'
 import './GraphCanvas.css'
 
 const nodeTypes = {
@@ -28,6 +29,7 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges }) {
   const [localEdges, setLocalEdges, onEdgesChange] = useEdgesState([])
   const [editModal, setEditModal] = useState({ open: false, type: null, item: null })
   const [cptModal, setCptModal] = useState({ open: false, node: null })
+  const [interventionModal, setInterventionModal] = useState({ open: false, node: null })
 
   // Sync external nodes to local state only when externally added (not from internal updates)
   useEffect(() => {
@@ -138,6 +140,47 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges }) {
     setNodes(propagatedNodes)
   }, [localEdges, localNodes, setLocalEdges, setEdges, setLocalNodes, setNodes])
 
+  const handleApplyIntervention = useCallback((nodeId, interventionValue) => {
+    // Apply do-operator: set node to fixed value and propagate to descendants only
+    const updatedNodes = applyIntervention(localNodes, localEdges, nodeId, interventionValue)
+
+    // Mark node as having intervention
+    const nodesWithIntervention = updatedNodes.map(n =>
+      n.id === nodeId
+        ? {
+            ...n,
+            data: {
+              ...n.data,
+              intervention: { active: true, value: interventionValue }
+            }
+          }
+        : n
+    )
+
+    setLocalNodes(nodesWithIntervention)
+    setNodes(nodesWithIntervention)
+  }, [localNodes, localEdges, setLocalNodes, setNodes])
+
+  const handleClearIntervention = useCallback((nodeId) => {
+    // Remove intervention and recalculate normally
+    const updatedNodes = localNodes.map(n =>
+      n.id === nodeId
+        ? {
+            ...n,
+            data: {
+              ...n.data,
+              intervention: null
+            }
+          }
+        : n
+    )
+
+    // Recalculate probabilities normally
+    const propagatedNodes = propagateProbabilities(updatedNodes, localEdges)
+    setLocalNodes(propagatedNodes)
+    setNodes(propagatedNodes)
+  }, [localNodes, localEdges, setLocalNodes, setNodes])
+
   return (
     <div className="graph-canvas">
       <ReactFlow
@@ -172,6 +215,7 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges }) {
           onClose={() => setEditModal({ open: false, type: null, item: null })}
           onDelete={editModal.type === 'node' ? handleDeleteNode : handleDeleteEdge}
           onOpenCPT={(node) => setCptModal({ open: true, node })}
+          onOpenIntervention={(node) => setInterventionModal({ open: true, node })}
         />
       )}
 
@@ -182,6 +226,15 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges }) {
           edges={localEdges}
           onSave={handleSaveNode}
           onClose={() => setCptModal({ open: false, node: null })}
+        />
+      )}
+
+      {interventionModal.open && interventionModal.node && (
+        <InterventionModal
+          node={interventionModal.node}
+          onApplyIntervention={handleApplyIntervention}
+          onClearIntervention={handleClearIntervention}
+          onClose={() => setInterventionModal({ open: false, node: null })}
         />
       )}
     </div>

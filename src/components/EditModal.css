@@ -205,3 +205,19 @@
 .cpt-button:hover {
   background-color: #535bf2;
 }
+
+.intervention-button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  background-color: #ff9800;
+  color: white;
+}
+
+.intervention-button:hover {
+  background-color: #f57c00;
+}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './EditModal.css'
 
-function EditModal({ type, item, onSave, onClose, onDelete, onOpenCPT }) {
+function EditModal({ type, item, onSave, onClose, onDelete, onOpenCPT, onOpenIntervention }) {
   const [label, setLabel] = useState('')
   const [probability, setProbability] = useState(0.5)
 
@@ -106,6 +106,11 @@ function EditModal({ type, item, onSave, onClose, onDelete, onOpenCPT }) {
             {type === 'node' && onOpenCPT && (
               <button className="cpt-button" onClick={() => { onClose(); onOpenCPT(item); }}>
                 Edit CPT
+              </button>
+            )}
+            {type === 'node' && onOpenIntervention && (
+              <button className="intervention-button" onClick={() => { onClose(); onOpenIntervention(item); }}>
+                do( ) Intervention
               </button>
             )}
           </div>

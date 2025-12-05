@@ -1,0 +1,146 @@
+.intervention-modal {
+  min-width: 550px;
+  max-width: 650px;
+}
+
+.intervention-info {
+  background-color: #1a1a1a;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  margin-bottom: 15px;
+  color: #888;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.intervention-info strong {
+  color: #646cff;
+}
+
+.active-intervention {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 8px;
+  background-color: rgba(255, 152, 0, 0.1);
+  border: 1px solid #ff9800;
+  border-radius: 4px;
+  color: #ff9800;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.intervention-explanation {
+  background-color: #242424;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  margin-bottom: 15px;
+}
+
+.intervention-explanation h4 {
+  margin: 0 0 10px 0;
+  color: #646cff;
+  font-size: 16px;
+}
+
+.intervention-explanation p {
+  margin: 0 0 10px 0;
+  color: #888;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.intervention-explanation ul {
+  margin: 10px 0;
+  padding-left: 20px;
+  color: #888;
+  font-size: 13px;
+}
+
+.intervention-explanation li {
+  margin-bottom: 5px;
+}
+
+.intervention-explanation strong {
+  color: #ffffff;
+}
+
+.intervention-explanation em {
+  color: #646cff;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.note {
+  font-style: italic;
+  color: #666 !important;
+  font-size: 13px !important;
+}
+
+.intervention-controls {
+  margin-bottom: 15px;
+}
+
+.intervention-controls h4 {
+  margin: 0 0 12px 0;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.intervention-warning {
+  background-color: rgba(255, 152, 0, 0.05);
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 15px;
+}
+
+.intervention-warning strong {
+  color: #ff9800;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.intervention-warning ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #ccc;
+  font-size: 13px;
+}
+
+.intervention-warning li {
+  margin-bottom: 4px;
+}
+
+.clear-button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  background-color: #ff9800;
+  color: white;
+}
+
+.clear-button:hover {
+  background-color: #f57c00;
+}
+
+.apply-button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  background-color: #646cff;
+  color: white;
+}
+
+.apply-button:hover {
+  background-color: #535bf2;
+}
