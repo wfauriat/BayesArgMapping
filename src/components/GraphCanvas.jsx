@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -9,33 +9,51 @@ import ReactFlow, {
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import BayesianNode from './BayesianNode'
+import ConditionalEdge from './ConditionalEdge'
+import EditModal from './EditModal'
+import { propagateProbabilities } from '../utils/bayesianInference'
 import './GraphCanvas.css'
 
 const nodeTypes = {
   bayesianNode: BayesianNode,
 }
 
+const edgeTypes = {
+  conditional: ConditionalEdge,
+}
+
 function GraphCanvas({ nodes, edges, setNodes, setEdges }) {
   const [localNodes, setLocalNodes, onNodesChange] = useNodesState(nodes)
   const [localEdges, setLocalEdges, onEdgesChange] = useEdgesState(edges)
+  const [editModal, setEditModal] = useState({ open: false, type: null, item: null })
 
   // Sync external nodes to local state
-  if (nodes.length !== localNodes.length) {
+  useEffect(() => {
     setLocalNodes(nodes)
-  }
+  }, [nodes, setLocalNodes])
+
+  useEffect(() => {
+    setLocalEdges(edges)
+  }, [edges, setLocalEdges])
 
   const onConnect = useCallback(
     (params) => {
       const newEdge = {
         ...params,
-        type: 'smoothstep',
+        type: 'conditional',
         animated: true,
         data: { probability: 0.5 }
       }
-      setLocalEdges((eds) => addEdge(newEdge, eds))
-      setEdges((eds) => addEdge(newEdge, eds))
+      const updatedEdges = addEdge(newEdge, localEdges)
+      setLocalEdges(updatedEdges)
+      setEdges(updatedEdges)
+
+      // Propagate probabilities through the network
+      const updatedNodes = propagateProbabilities(localNodes, updatedEdges)
+      setLocalNodes(updatedNodes)
+      setNodes(updatedNodes)
     },
-    [setLocalEdges, setEdges]
+    [localEdges, localNodes, setLocalEdges, setEdges, setLocalNodes, setNodes]
   )
 
   const handleNodesChange = useCallback(
@@ -60,6 +78,60 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges }) {
     [onNodesChange, setNodes]
   )
 
+  const handleNodeClick = useCallback((event, node) => {
+    setEditModal({ open: true, type: 'node', item: node })
+  }, [])
+
+  const handleEdgeClick = useCallback((event, edge) => {
+    setEditModal({ open: true, type: 'edge', item: edge })
+  }, [])
+
+  const handleSaveNode = useCallback((updatedNode) => {
+    const updatedNodes = localNodes.map(n =>
+      n.id === updatedNode.id ? updatedNode : n
+    )
+
+    // Propagate probability changes through the network
+    const propagatedNodes = propagateProbabilities(updatedNodes, localEdges, updatedNode.id)
+
+    setLocalNodes(propagatedNodes)
+    setNodes(propagatedNodes)
+  }, [localNodes, localEdges, setLocalNodes, setNodes])
+
+  const handleSaveEdge = useCallback((updatedEdge) => {
+    const updatedEdges = localEdges.map(e =>
+      e.id === updatedEdge.id ? updatedEdge : e
+    )
+    setLocalEdges(updatedEdges)
+    setEdges(updatedEdges)
+
+    // Propagate probability changes through the network
+    const propagatedNodes = propagateProbabilities(localNodes, updatedEdges)
+    setLocalNodes(propagatedNodes)
+    setNodes(propagatedNodes)
+  }, [localEdges, localNodes, setLocalEdges, setEdges, setLocalNodes, setNodes])
+
+  const handleDeleteNode = useCallback((nodeId) => {
+    const updatedNodes = localNodes.filter(n => n.id !== nodeId)
+    const updatedEdges = localEdges.filter(e => e.source !== nodeId && e.target !== nodeId)
+
+    setLocalNodes(updatedNodes)
+    setNodes(updatedNodes)
+    setLocalEdges(updatedEdges)
+    setEdges(updatedEdges)
+  }, [localNodes, localEdges, setLocalNodes, setNodes, setLocalEdges, setEdges])
+
+  const handleDeleteEdge = useCallback((edgeId) => {
+    const updatedEdges = localEdges.filter(e => e.id !== edgeId)
+    setLocalEdges(updatedEdges)
+    setEdges(updatedEdges)
+
+    // Recalculate probabilities after edge removal
+    const propagatedNodes = propagateProbabilities(localNodes, updatedEdges)
+    setLocalNodes(propagatedNodes)
+    setNodes(propagatedNodes)
+  }, [localEdges, localNodes, setLocalEdges, setEdges, setLocalNodes, setNodes])
+
   return (
     <div className="graph-canvas">
       <ReactFlow
@@ -68,17 +140,33 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges }) {
         onNodesChange={handleNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onNodeClick={handleNodeClick}
+        onEdgeClick={handleEdgeClick}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         fitView
       >
         <Controls />
         <MiniMap
           nodeColor={(node) => {
-            return '#646cff'
+            const prob = node.data?.probability ?? 0.5
+            // Color based on probability: red (low) to green (high)
+            const hue = prob * 120 // 0 = red, 120 = green
+            return `hsl(${hue}, 70%, 50%)`
           }}
         />
         <Background variant="dots" gap={12} size={1} />
       </ReactFlow>
+
+      {editModal.open && (
+        <EditModal
+          type={editModal.type}
+          item={editModal.item}
+          onSave={editModal.type === 'node' ? handleSaveNode : handleSaveEdge}
+          onClose={() => setEditModal({ open: false, type: null, item: null })}
+          onDelete={editModal.type === 'node' ? handleDeleteNode : handleDeleteEdge}
+        />
+      )}
     </div>
   )
 }

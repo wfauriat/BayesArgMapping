@@ -1,0 +1,186 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background-color: #1a1a1a;
+  border: 2px solid #646cff;
+  border-radius: 12px;
+  padding: 0;
+  min-width: 400px;
+  max-width: 500px;
+  box-shadow: 0 8px 32px rgba(100, 108, 255, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 32px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.close-button:hover {
+  color: #fff;
+  border-color: transparent;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-body .input-group {
+  margin-bottom: 20px;
+}
+
+.modal-body .input-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #888;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.modal-body .input-group input[type="text"],
+.modal-body .input-group input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.modal-body .input-group input:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.probability-display {
+  margin-top: 8px;
+  color: #646cff;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.probability-slider {
+  margin-top: 10px;
+}
+
+.probability-slider input[type="range"] {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, #333 0%, #646cff 100%);
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.probability-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #646cff;
+  cursor: pointer;
+  border: 2px solid #1a1a1a;
+}
+
+.probability-slider input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #646cff;
+  cursor: pointer;
+  border: 2px solid #1a1a1a;
+}
+
+.modal-footer {
+  padding: 20px;
+  border-top: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.save-button,
+.cancel-button,
+.delete-button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.save-button {
+  background-color: #646cff;
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #535bf2;
+}
+
+.cancel-button {
+  background-color: #333;
+  color: #888;
+}
+
+.cancel-button:hover {
+  background-color: #444;
+  color: #fff;
+  border-color: transparent;
+}
+
+.delete-button {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #b71c1c;
+  border-color: transparent;
+}

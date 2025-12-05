@@ -88,3 +88,10 @@
 .instructions li {
   margin-bottom: 8px;
 }
+
+.info-text {
+  margin: 0;
+  color: #888;
+  font-size: 13px;
+  line-height: 1.6;
+}

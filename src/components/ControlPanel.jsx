@@ -56,10 +56,21 @@ function ControlPanel({ onAddNode }) {
         <h3>Instructions</h3>
         <ul className="instructions">
           <li>Add nodes using the form above</li>
+          <li>Click nodes to edit label and probability</li>
           <li>Drag nodes to reposition them</li>
           <li>Connect nodes by dragging from handles</li>
-          <li>Click edges to edit probabilities</li>
+          <li>Click edges to edit conditional probabilities</li>
+          <li>Probabilities auto-update via Bayesian inference</li>
         </ul>
+      </div>
+
+      <div className="control-section">
+        <h3>Bayesian Network</h3>
+        <p className="info-text">
+          This app implements Bayesian inference with a noisy-OR model.
+          When you connect nodes or change probabilities, the network automatically
+          propagates updates to dependent nodes using conditional probabilities.
+        </p>
       </div>
     </div>
   )
