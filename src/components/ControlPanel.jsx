@@ -1,7 +1,8 @@
 import { useState } from 'react'
+import StatisticsPanel from './StatisticsPanel'
 import './ControlPanel.css'
 
-function ControlPanel({ onAddNode }) {
+function ControlPanel({ nodes, edges, onAddNode, onOpenImportExport }) {
   const [nodeLabel, setNodeLabel] = useState('')
   const [nodeProbability, setNodeProbability] = useState(0.5)
 
@@ -31,6 +32,7 @@ function ControlPanel({ onAddNode }) {
             value={nodeLabel}
             onChange={(e) => setNodeLabel(e.target.value)}
             placeholder="Enter node label"
+            onKeyPress={(e) => e.key === 'Enter' && handleAddNode()}
           />
         </div>
 
@@ -53,10 +55,20 @@ function ControlPanel({ onAddNode }) {
       </div>
 
       <div className="control-section">
+        <h3>File Operations</h3>
+        <button className="action-button-compact" onClick={onOpenImportExport}>
+          📁 Import / Export
+        </button>
+      </div>
+
+      <StatisticsPanel nodes={nodes} edges={edges} />
+
+      <div className="control-section">
         <h3>Instructions</h3>
         <ul className="instructions">
           <li>Add nodes using the form above</li>
           <li>Click nodes to edit label and probability</li>
+          <li>Right-click node for CPT options</li>
           <li>Drag nodes to reposition them</li>
           <li>Connect nodes by dragging from handles</li>
           <li>Click edges to edit conditional probabilities</li>
@@ -67,9 +79,9 @@ function ControlPanel({ onAddNode }) {
       <div className="control-section">
         <h3>Bayesian Network</h3>
         <p className="info-text">
-          This app implements Bayesian inference with a noisy-OR model.
-          When you connect nodes or change probabilities, the network automatically
-          propagates updates to dependent nodes using conditional probabilities.
+          This app implements Bayesian inference with a noisy-OR model by default.
+          For complex relationships, use Conditional Probability Tables (CPT) to define
+          exact probabilities for all parent state combinations.
         </p>
       </div>
     </div>

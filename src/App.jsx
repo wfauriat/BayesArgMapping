@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import ControlPanel from './components/ControlPanel'
 import GraphCanvas from './components/GraphCanvas'
+import ImportExportModal from './components/ImportExportModal'
 import './App.css'
 
 function App() {
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
+  const [showImportExport, setShowImportExport] = useState(false)
 
   const addNode = (nodeData) => {
     const newNode = {
@@ -20,15 +22,34 @@ function App() {
     setNodes((nds) => [...nds, newNode])
   }
 
+  const handleImport = (importedNodes, importedEdges) => {
+    setNodes(importedNodes)
+    setEdges(importedEdges)
+  }
+
   return (
     <div className="app-container">
-      <ControlPanel onAddNode={addNode} />
+      <ControlPanel
+        nodes={nodes}
+        edges={edges}
+        onAddNode={addNode}
+        onOpenImportExport={() => setShowImportExport(true)}
+      />
       <GraphCanvas
         nodes={nodes}
         edges={edges}
         setNodes={setNodes}
         setEdges={setEdges}
       />
+
+      {showImportExport && (
+        <ImportExportModal
+          nodes={nodes}
+          edges={edges}
+          onImport={handleImport}
+          onClose={() => setShowImportExport(false)}
+        />
+      )}
     </div>
   )
 }

@@ -11,7 +11,8 @@ import 'reactflow/dist/style.css'
 import BayesianNode from './BayesianNode'
 import ConditionalEdge from './ConditionalEdge'
 import EditModal from './EditModal'
-import { propagateProbabilities } from '../utils/bayesianInference'
+import CPTModal from './CPTModal'
+import { propagateProbabilities, buildDependencyGraph } from '../utils/bayesianInference'
 import './GraphCanvas.css'
 
 const nodeTypes = {
@@ -26,6 +27,7 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges }) {
   const [localNodes, setLocalNodes, onNodesChange] = useNodesState([])
   const [localEdges, setLocalEdges, onEdgesChange] = useEdgesState([])
   const [editModal, setEditModal] = useState({ open: false, type: null, item: null })
+  const [cptModal, setCptModal] = useState({ open: false, node: null })
 
   // Sync external nodes to local state only when externally added (not from internal updates)
   useEffect(() => {
@@ -169,10 +171,27 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges }) {
           onSave={editModal.type === 'node' ? handleSaveNode : handleSaveEdge}
           onClose={() => setEditModal({ open: false, type: null, item: null })}
           onDelete={editModal.type === 'node' ? handleDeleteNode : handleDeleteEdge}
+          onOpenCPT={(node) => setCptModal({ open: true, node })}
+        />
+      )}
+
+      {cptModal.open && cptModal.node && (
+        <CPTModal
+          node={cptModal.node}
+          parentNodes={getParentNodes(cptModal.node)}
+          edges={localEdges}
+          onSave={handleSaveNode}
+          onClose={() => setCptModal({ open: false, node: null })}
         />
       )}
     </div>
   )
+
+  function getParentNodes(node) {
+    const graph = buildDependencyGraph(localNodes, localEdges)
+    const parentIds = graph[node.id]?.parents || []
+    return parentIds.map(id => localNodes.find(n => n.id === id)).filter(Boolean)
+  }
 }
 
 export default GraphCanvas

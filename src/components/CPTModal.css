@@ -1,0 +1,105 @@
+.cpt-modal {
+  min-width: 600px;
+  max-width: 800px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.cpt-modal .modal-body {
+  overflow-y: auto;
+  max-height: calc(80vh - 150px);
+}
+
+.cpt-info {
+  background-color: #1a1a1a;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  margin-bottom: 15px;
+  color: #888;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.cpt-info strong {
+  color: #646cff;
+}
+
+.cpt-description {
+  color: #888;
+  font-size: 13px;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.cpt-table-container {
+  overflow-x: auto;
+  margin-bottom: 15px;
+}
+
+.cpt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.cpt-table th {
+  background-color: #242424;
+  color: #646cff;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #333;
+  font-weight: 600;
+}
+
+.cpt-table td {
+  padding: 8px 10px;
+  border: 1px solid #333;
+  color: #ffffff;
+}
+
+.cpt-table td.state-cell {
+  text-align: center;
+  color: #888;
+}
+
+.cpt-input {
+  width: 100%;
+  padding: 6px;
+  background-color: #0a0a0a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 14px;
+  text-align: center;
+}
+
+.cpt-input:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.simple-button {
+  padding: 10px 20px;
+  background-color: #333;
+  color: #888;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.simple-button:hover {
+  background-color: #444;
+  color: #fff;
+}
+
+.info-message {
+  color: #888;
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+  padding: 20px;
+}

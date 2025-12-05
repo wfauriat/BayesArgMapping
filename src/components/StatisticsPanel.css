@@ -1,0 +1,46 @@
+.statistics-panel {
+  background-color: #242424;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.statistics-panel h3 {
+  margin: 0 0 15px 0;
+  color: #646cff;
+  font-size: 18px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.stat-item {
+  background-color: #1a1a1a;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  text-align: center;
+}
+
+.stat-label {
+  color: #888;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.empty-state {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  padding: 20px;
+  font-style: italic;
+}

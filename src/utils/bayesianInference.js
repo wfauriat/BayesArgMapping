@@ -20,7 +20,12 @@ export function calculateNodeProbability(node, parentNodes, edges) {
     return node.data?.probability ?? 0.5
   }
 
-  // For simplicity, we use a noisy-OR model
+  // Check if node uses CPT (Conditional Probability Table)
+  if (node.data?.useCPT && node.data?.cpt) {
+    return calculateProbabilityWithCPT(node, parentNodes)
+  }
+
+  // Otherwise, use noisy-OR model
   // P(child | parents) = 1 - ∏(1 - P(parent) * P(edge))
   // This is a common approximation in Bayesian networks
 
@@ -42,6 +47,48 @@ export function calculateNodeProbability(node, parentNodes, edges) {
   })
 
   return 1 - product
+}
+
+/**
+ * Calculate probability using Conditional Probability Table
+ * Uses exact inference by marginalizing over all parent state combinations
+ *
+ * @param {Object} node - The node with CPT data
+ * @param {Array} parentNodes - Array of parent nodes
+ * @returns {number} - Calculated probability
+ */
+function calculateProbabilityWithCPT(node, parentNodes) {
+  const cpt = node.data.cpt
+  if (!cpt) return 0.5
+
+  // Marginalize over all possible parent state combinations
+  let totalProb = 0
+  const numParents = parentNodes.length
+  const numCombinations = Math.pow(2, numParents)
+
+  for (let i = 0; i < numCombinations; i++) {
+    const states = []
+    let jointProb = 1.0
+
+    // Generate this combination of states and calculate joint probability
+    for (let j = 0; j < numParents; j++) {
+      const state = (i >> (numParents - 1 - j)) & 1
+      states.push(state === 1)
+
+      const parentProb = parentNodes[j].data?.probability ?? 0.5
+      // P(parent = state)
+      jointProb *= state === 1 ? parentProb : (1 - parentProb)
+    }
+
+    // Get CPT entry for this combination
+    const key = states.join(',')
+    const conditionalProb = cpt[key] ?? 0.5
+
+    // Add weighted contribution
+    totalProb += jointProb * conditionalProb
+  }
+
+  return totalProb
 }
 
 /**
