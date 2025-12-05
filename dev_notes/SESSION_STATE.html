@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>SESSION_STATE</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../Work/Notes/prettify.css" />
+</head>
+<body>
+<h1 id="session-state---bayesian-argument-mapping-app">Session State -
+Bayesian Argument Mapping App</h1>
+<p><strong>Last Updated:</strong> December 5, 2025 - 5:55 PM
+<strong>Session Duration:</strong> ~6 hours <strong>Git Branch:</strong>
+master <strong>Dev Server:</strong> Running at
+<code>http://localhost:5173/</code></p>
+<hr />
+<h2 id="quick-start-for-new-sessions">Quick Start for New Sessions</h2>
+<ol type="1">
+<li><strong>Read this file</strong> for current context (you’re doing it
+now!)</li>
+<li><strong>Check git status</strong> to see if there are uncommitted
+changes</li>
+<li><strong>Review recent commits</strong> (see Git History section
+below)</li>
+<li><strong>Check Suggested Next Features</strong> section for
+ideas</li>
+</ol>
+<hr />
+<h2 id="project-overview">Project Overview</h2>
+<p><strong>What is this?</strong> An interactive web-based argument
+mapping tool built with React and React Flow. It uses Bayesian networks
+for probabilistic reasoning and implements Pearl’s causal inference
+framework (do-operator).</p>
+<p><strong>Core Technologies:</strong> - React 18.3.1 - React Flow
+11.11.4 (graph visualization) - Vite (build tool) - Pure JavaScript (no
+TypeScript)</p>
+<p><strong>Key Concepts:</strong> - Nodes represent
+propositions/arguments with probabilities - Edges represent
+causal/logical relationships with conditional probabilities - Bayesian
+inference propagates probabilities through the network - do-operator
+allows causal interventions (not just observation) - CPT (Conditional
+Probability Tables) for exact inference</p>
+<hr />
+<h2 id="current-feature-status">Current Feature Status</h2>
+<h3 id="fully-implemented-features">✅ Fully Implemented Features</h3>
+<ol type="1">
+<li><strong>Core Graph Editing</strong>
+<ul>
+<li>Add/delete nodes and edges</li>
+<li>Drag nodes to reposition</li>
+<li>Click nodes/edges to edit properties</li>
+<li>Interactive canvas with zoom/pan/minimap</li>
+</ul></li>
+<li><strong>Bayesian Inference</strong>
+<ul>
+<li>Automatic probability propagation (noisy-OR model)</li>
+<li>Conditional Probability Tables (CPT) for complex relationships</li>
+<li>Topological ordering for correct inference</li>
+<li>Real-time updates when network changes</li>
+</ul></li>
+<li><strong>Causal Interventions (do-operator)</strong>
+<ul>
+<li>Set nodes to fixed values</li>
+<li>Breaks incoming causal links</li>
+<li>Propagates only to descendants</li>
+<li>Visual indicators (orange styling, “do()” badge)</li>
+</ul></li>
+<li><strong>Node Templates</strong> ⭐ RECENT (Prompt #14, 5:15 PM)
+<ul>
+<li>6 semantic templates: Default, Evidence, Hypothesis, Conclusion,
+Assumption, Counter-Argument</li>
+<li>Each has unique color, icon (emoji), and default probability</li>
+<li>Template selector in ControlPanel (new nodes) and EditModal
+(existing nodes)</li>
+<li>Auto-updates probability when template changed</li>
+</ul></li>
+<li><strong>Edge Labels/Types</strong> ⭐ RECENT (Prompt #14, 5:15 PM)
+<ul>
+<li>5 edge types: Supports, Contradicts, Requires, Influences,
+Correlates</li>
+<li>Color-coded with different stroke patterns
+(solid/dashed/dotted)</li>
+<li>Optional text labels on edges</li>
+<li>Edge type selector in EditModal</li>
+</ul></li>
+<li><strong>Save/Load/Export</strong>
+<ul>
+<li>Save to browser localStorage</li>
+<li>Export to JSON file</li>
+<li>Import from JSON</li>
+<li>Copy/paste JSON to clipboard</li>
+<li>Export to PNG (optional, requires html2canvas)</li>
+</ul></li>
+<li><strong>Auto-Layout</strong>
+<ul>
+<li>Simple Layered algorithm (top-to-bottom)</li>
+<li>Groups nodes by dependency level</li>
+<li>Modular architecture ready for additional algorithms (Dagre,
+D3-Force, ELK)</li>
+</ul></li>
+<li><strong>Network Statistics</strong>
+<ul>
+<li>Real-time statistics panel</li>
+<li>8 metrics: node count, edge count, avg probability, roots, leaves,
+avg degree, max depth, density</li>
+</ul></li>
+</ol>
+<h3 id="known-issues-limitations">🚧 Known Issues / Limitations</h3>
+<ul>
+<li>No undo/redo functionality yet</li>
+<li>Auto-layout only has one algorithm (Simple Layered)</li>
+<li>No multi-select or bulk operations</li>
+<li>No graph validation (doesn’t detect cycles)</li>
+<li>No animation/transitions</li>
+</ul>
+<hr />
+<h2 id="architecture-overview">Architecture Overview</h2>
+<h3 id="directory-structure">Directory Structure</h3>
+<pre><code>argument-mapping-app/
+├── src/
+│   ├── components/
+│   │   ├── BayesianNode.jsx/css          # Custom node with template styling
+│   │   ├── ConditionalEdge.jsx/css       # Custom edge with type styling
+│   │   ├── ControlPanel.jsx/css          # Left sidebar controls
+│   │   ├── GraphCanvas.jsx/css           # Main React Flow canvas
+│   │   ├── EditModal.jsx/css             # Edit node/edge properties
+│   │   ├── CPTModal.jsx/css              # Conditional Probability Table editor
+│   │   ├── InterventionModal.jsx/css     # do-operator interface
+│   │   ├── ImportExportModal.jsx/css     # Save/load/export interface
+│   │   └── StatisticsPanel.jsx/css       # Network statistics
+│   ├── utils/
+│   │   ├── bayesianInference.js          # Core probability calculations
+│   │   ├── exportImport.js               # Import/export utilities
+│   │   ├── layoutAlgorithms.js           # Auto-layout algorithms
+│   │   └── nodeTemplates.js              # Template configurations ⭐ NEW
+│   ├── App.jsx/css                       # Main container
+│   ├── index.css                         # Global styles
+│   └── main.jsx                          # Entry point
+├── package.json
+├── vite.config.js
+└── .gitignore</code></pre>
+<h3 id="key-files-to-know">Key Files to Know</h3>
+<p><strong><code>src/utils/nodeTemplates.js</code></strong> ⭐ NEW -
+Defines all node templates and edge types - Configuration-based, easy to
+extend - Exports getter functions for UI components</p>
+<p><strong><code>src/utils/bayesianInference.js</code></strong> - Core
+inference engine - Functions: <code>propagateProbabilities()</code>,
+<code>applyIntervention()</code>,
+<code>calculateNodeProbability()</code> - Implements noisy-OR model and
+exact CPT inference</p>
+<p><strong><code>src/components/GraphCanvas.jsx</code></strong> - Main
+React Flow integration - Manages node/edge state with React Flow hooks -
+Handles all modals (Edit, CPT, Intervention) - Syncs with parent state
+carefully to avoid infinite loops</p>
+<p><strong><code>src/App.jsx</code></strong> - Top-level state
+management (nodes, edges) - <code>addNode()</code> function - make sure
+to pass all template properties! - Modal visibility state</p>
+<h3 id="data-structures">Data Structures</h3>
+<p><strong>Node:</strong></p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">id</span><span class="op">:</span> <span class="st">&quot;node-123&quot;</span><span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;bayesianNode&quot;</span><span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">position</span><span class="op">:</span> { <span class="dt">x</span><span class="op">:</span> <span class="dv">100</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">200</span> }<span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">data</span><span class="op">:</span> {</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Evidence A&quot;</span><span class="op">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">probability</span><span class="op">:</span> <span class="fl">0.8</span><span class="op">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">template</span><span class="op">:</span> <span class="st">&quot;evidence&quot;</span><span class="op">,</span>        <span class="co">// ⭐ NEW</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">color</span><span class="op">:</span> <span class="st">&quot;#4ade80&quot;</span><span class="op">,</span>            <span class="co">// ⭐ NEW</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">backgroundColor</span><span class="op">:</span> <span class="st">&quot;#1a2e1a&quot;</span><span class="op">,</span>  <span class="co">// ⭐ NEW</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">icon</span><span class="op">:</span> <span class="st">&quot;📊&quot;</span><span class="op">,</span>                  <span class="co">// ⭐ NEW</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">useCPT</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">cpt</span><span class="op">:</span> <span class="kw">null</span><span class="op">,</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">intervention</span><span class="op">:</span> <span class="kw">null</span>  <span class="co">// or { active: true, value: 0.9 }</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>Edge:</strong></p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">id</span><span class="op">:</span> <span class="st">&quot;edge-123&quot;</span><span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">source</span><span class="op">:</span> <span class="st">&quot;node-1&quot;</span><span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">target</span><span class="op">:</span> <span class="st">&quot;node-2&quot;</span><span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;conditional&quot;</span><span class="op">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">animated</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">data</span><span class="op">:</span> {</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">probability</span><span class="op">:</span> <span class="fl">0.7</span><span class="op">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">edgeType</span><span class="op">:</span> <span class="st">&quot;supports&quot;</span><span class="op">,</span>     <span class="co">// ⭐ NEW</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">edgeLabel</span><span class="op">:</span> <span class="st">&quot;Evidence for&quot;</span> <span class="co">// ⭐ NEW (optional)</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="git-history-recent-commits">Git History (Recent Commits)</h2>
+<pre><code>87ca2d2  Remove duplicate DEVELOPMENT_LOG.md file (5:55 PM)
+d7d0d63  Add node templates and edge labels/types features (5:50 PM) ⭐
+61b93a7  Change auto-layout to vertical (top-to-bottom) direction (5:05 PM)
+709300b  Add auto-layout feature with Simple Layered algorithm (4:40 PM)
+bd482e5  Add interventions UI with do-operator controls (3:50 PM)
+e51d805  Add save/load, export, CPT, and statistics features (2:15 PM)
+434d59a  Fix node addition bug in GraphCanvas (1:45 PM)
+cc0f348  Add node/edge editing and Bayesian inference (1:15 PM)
+c484c4d  first proposal with React Flow (1:00 PM)</code></pre>
+<p><strong>Most Recent Feature:</strong> Node templates and edge labels
+(Prompt #14)</p>
+<hr />
+<h2 id="development-patterns-conventions">Development Patterns &amp;
+Conventions</h2>
+<h3 id="state-management">State Management</h3>
+<ul>
+<li>App.jsx holds global state (nodes, edges)</li>
+<li>GraphCanvas uses React Flow’s <code>useNodesState</code> and
+<code>useEdgesState</code> for local state</li>
+<li>Careful synchronization to avoid infinite loops:
+<ul>
+<li>Sync only when array lengths change</li>
+<li>Use <code>layoutVersion</code> counter for explicit auto-layout
+triggers</li>
+</ul></li>
+</ul>
+<h3 id="adding-new-templates">Adding New Templates</h3>
+<ol type="1">
+<li>Edit <code>src/utils/nodeTemplates.js</code></li>
+<li>Add to <code>nodeTemplates</code> object with: name, description,
+color, backgroundColor, probability, icon</li>
+<li>No other changes needed - UI automatically populates</li>
+</ol>
+<h3 id="adding-new-edge-types">Adding New Edge Types</h3>
+<ol type="1">
+<li>Edit <code>src/utils/nodeTemplates.js</code></li>
+<li>Add to <code>edgeTypes</code> object with: name, color, style
+(solid/dashed/dotted), animated</li>
+<li>No other changes needed - UI automatically populates</li>
+</ol>
+<h3 id="component-communication">Component Communication</h3>
+<ul>
+<li>Parent passes props down (nodes, edges, handlers)</li>
+<li>Children call handlers to update parent state</li>
+<li>Modals receive item to edit and call <code>onSave</code> with
+updated item</li>
+<li>Probability propagation happens automatically after state
+changes</li>
+</ul>
+<h3 id="git-commit-messages">Git Commit Messages</h3>
+<ul>
+<li>Use conventional format with emoji where appropriate</li>
+<li>Include detailed implementation notes</li>
+<li>List all files changed</li>
+<li>Add “🤖 Generated with Claude Code” footer</li>
+<li>Co-Authored-By: Claude</li>
+</ul>
+<hr />
+<h2 id="suggested-next-features">Suggested Next Features</h2>
+<p>These were suggested in Prompt #13 (5:10 PM). User has not selected
+the next feature yet.</p>
+<h3 id="top-3-recommendations">Top 3 Recommendations:</h3>
+<p><strong>🥇 Undo/Redo Functionality</strong> - HIGHLY RECOMMENDED -
+Critical for user experience - Track history stack of graph states -
+Implement Ctrl+Z / Ctrl+Y shortcuts - Complexity: Moderate - Priority:
+HIGH</p>
+<p><strong>🥈 Probability Queries/Calculator</strong> - “What if”
+scenario testing - Query: P(conclusion | evidence1=true,
+evidence2=false) - Most Probable Explanation (MPE) - Show reasoning
+chain - Complexity: Medium-high - Priority: MEDIUM-HIGH</p>
+<p><strong>🥉 Multi-Select &amp; Bulk Operations</strong> - Select
+multiple nodes (Shift+click, drag-to-select) - Move groups, delete
+multiple, bulk property changes - Complexity: Medium - Priority:
+MEDIUM</p>
+<h3 id="other-good-options">Other Good Options:</h3>
+<ol start="4" type="1">
+<li><strong>Graph Validation &amp; Warnings</strong> (Easy, useful)
+<ul>
+<li>Detect cycles (invalid for DAGs)</li>
+<li>Warn about disconnected components</li>
+<li>Flag probability inconsistencies</li>
+</ul></li>
+<li><strong>Sensitivity Analysis</strong> (Advanced, high value)
+<ul>
+<li>Show which changes affect conclusion most</li>
+<li>Visualize uncertainty</li>
+</ul></li>
+<li><strong>Zoom to Fit / Focus Features</strong> (Easy, nice UX)
+<ul>
+<li>Button to fit graph in view</li>
+<li>Double-click to center on node</li>
+</ul></li>
+<li><strong>Share via URL</strong> (Medium, collaboration)
+<ul>
+<li>Encode graph state in URL</li>
+<li>No backend needed</li>
+</ul></li>
+<li><strong>Custom Node Styling</strong> (Easy-medium, visual)
+<ul>
+<li>More shape options</li>
+<li>Theme support (light mode, high contrast)</li>
+</ul></li>
+<li><strong>Animation &amp; Transitions</strong> (Easy, polish)
+<ul>
+<li>Animate auto-layout</li>
+<li>Highlight probability propagation</li>
+</ul></li>
+<li><strong>Additional Layout Algorithms</strong> (Easy-medium, building
+on existing)
+<ul>
+<li>Add Dagre (hierarchical)</li>
+<li>Add D3-Force (physics-based)</li>
+<li>Add layout selector dropdown</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="important-gotchas-lessons-learned">Important Gotchas / Lessons
+Learned</h2>
+<ol type="1">
+<li><strong>GraphCanvas State Sync</strong>
+<ul>
+<li>Don’t sync on every <code>nodes</code> prop change - causes infinite
+loops</li>
+<li>Only sync when array length changes OR when explicit signal
+(<code>layoutVersion</code>)</li>
+<li>React Flow maintains internal state separate from parent</li>
+</ul></li>
+<li><strong>Template Data Must Be Passed Completely</strong>
+<ul>
+<li>When adding nodes in App.jsx, must pass: template, color,
+backgroundColor, icon</li>
+<li>Bug discovered in Prompt #14 where these were missing</li>
+<li>Fixed in commit d7d0d63</li>
+</ul></li>
+<li><strong>React Flow Best Practices</strong>
+<ul>
+<li>Use <code>useNodesState</code> and <code>useEdgesState</code> for
+local state</li>
+<li>Use <code>onNodesChange</code> and <code>onEdgesChange</code> for
+built-in features (drag, select)</li>
+<li>Custom handlers for custom behavior (clicks, deletes)</li>
+</ul></li>
+<li><strong>Probability Propagation</strong>
+<ul>
+<li>Always call <code>propagateProbabilities()</code> after editing
+nodes/edges</li>
+<li>Uses topological ordering to ensure parents calculated before
+children</li>
+<li>Interventions use <code>applyIntervention()</code> instead (only
+propagates to descendants)</li>
+</ul></li>
+<li><strong>Vite vs Create React App</strong>
+<ul>
+<li>Dev server: <code>npm run dev</code> (not
+<code>npm start</code>)</li>
+<li>Instant HMR, no rebuild needed during development</li>
+<li>Build: <code>npm run build</code> when ready for production</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="testing-checklist">Testing Checklist</h2>
+<p>When implementing new features, test: - [ ] Add nodes with different
+templates - [ ] Edit existing node templates - [ ] Create edges with
+different types - [ ] Edit existing edge types and labels - [ ] Manual
+node dragging still works after auto-layout - [ ] Probability
+propagation updates correctly - [ ] Save/load preserves all data
+(templates, edge types, etc.) - [ ] Interventions still work - [ ] CPT
+still works - [ ] Statistics panel updates - [ ] No console errors - [ ]
+HMR updates without refresh</p>
+<hr />
+<h2 id="quick-reference---common-commands">Quick Reference - Common
+Commands</h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Start dev server</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run dev</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Build for production</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run build</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview production build</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run preview</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Git shortcuts</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span> <span class="at">-10</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add .</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">&quot;message&quot;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Check running background processes</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Use BashOutput tool to see dev server logs</span></span></code></pre></div>
+<hr />
+<h2 id="session-context-notes">Session Context Notes</h2>
+<p><strong>Development Flow:</strong> - User provides feature requests -
+I implement features modularly - Commit after each major feature or bug
+fix - Update development_log.md with detailed notes - Test features via
+HMR without server restart</p>
+<p><strong>Communication Style:</strong> - Direct and technical - Code
+examples in documentation - Detailed commit messages - Track all changes
+in development_log.md - Use emojis sparingly, only when user
+requests</p>
+<p><strong>File Organization:</strong> - Keep related files together
+(component + CSS) - Utils folder for shared logic - Modular, extensible
+architecture - Configuration over hard-coding</p>
+<hr />
+<h2 id="next-session---what-to-do">Next Session - What to Do</h2>
+<ol type="1">
+<li><strong>Start Session:</strong>
+<ul>
+<li>Read this SESSION_STATE.md (you are here!)</li>
+<li>Check <code>git status</code> for any uncommitted changes</li>
+<li>Check <code>git log --oneline -5</code> to see latest work</li>
+<li>Ask user what feature they want next</li>
+</ul></li>
+<li><strong>During Session:</strong>
+<ul>
+<li>Implement requested features</li>
+<li>Commit frequently with good messages</li>
+<li>Update development_log.md with major changes</li>
+<li>Test via HMR as you go</li>
+</ul></li>
+<li><strong>End Session:</strong>
+<ul>
+<li>Update this SESSION_STATE.md with:
+<ul>
+<li>New features completed</li>
+<li>New commits</li>
+<li>Current status</li>
+<li>Updated “Last Updated” timestamp</li>
+</ul></li>
+<li>Make sure everything is committed</li>
+<li>Update “Suggested Next Features” if priorities changed</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="key-decisions-rationale">Key Decisions &amp; Rationale</h2>
+<p><strong>Why React Flow?</strong> - Built for React, not imperative
+like D3 - Handles drag/zoom/pan out of the box - Custom node/edge
+components - Good performance</p>
+<p><strong>Why noisy-OR model?</strong> - Appropriate for argument
+mapping - Multiple independent causes - Simpler than full CPT for basic
+cases - CPT available when needed</p>
+<p><strong>Why top-to-bottom layout?</strong> - Matches handle positions
+(top = input, bottom = output) - Standard for Bayesian networks -
+Natural causal flow (causes → effects)</p>
+<p><strong>Why template system?</strong> - Semantic meaning in argument
+maps - Visual distinction between node types - Quick node creation with
+sensible defaults - Extensible for new types</p>
+<p><strong>Why configuration-based templates?</strong> - Easy to add new
+templates without code changes - Centralized in one file - UI
+automatically updates - Consistent pattern</p>
+<hr />
+<p><strong>End of Session State Document</strong></p>
+<p><em>This file should be updated at the end of each development
+session with new features, commits, and context.</em></p>
+</body>
+</html>
