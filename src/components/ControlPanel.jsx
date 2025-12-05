@@ -1,19 +1,33 @@
 import { useState } from 'react'
 import StatisticsPanel from './StatisticsPanel'
+import { getAvailableTemplates, getNodeTemplate } from '../utils/nodeTemplates'
 import './ControlPanel.css'
 
 function ControlPanel({ nodes, edges, onAddNode, onOpenImportExport, onAutoLayout }) {
   const [nodeLabel, setNodeLabel] = useState('')
   const [nodeProbability, setNodeProbability] = useState(0.5)
+  const [selectedTemplate, setSelectedTemplate] = useState('default')
+
+  const handleTemplateChange = (templateKey) => {
+    setSelectedTemplate(templateKey)
+    const template = getNodeTemplate(templateKey)
+    setNodeProbability(template.probability)
+  }
 
   const handleAddNode = () => {
     if (nodeLabel.trim()) {
+      const template = getNodeTemplate(selectedTemplate)
       onAddNode({
         label: nodeLabel,
-        probability: parseFloat(nodeProbability)
+        probability: parseFloat(nodeProbability),
+        template: selectedTemplate,
+        color: template.color,
+        backgroundColor: template.backgroundColor,
+        icon: template.icon
       })
       setNodeLabel('')
       setNodeProbability(0.5)
+      setSelectedTemplate('default')
     }
   }
 
@@ -23,6 +37,22 @@ function ControlPanel({ nodes, edges, onAddNode, onOpenImportExport, onAutoLayou
 
       <div className="control-section">
         <h3>Add Node</h3>
+
+        <div className="input-group">
+          <label htmlFor="node-template">Node Type:</label>
+          <select
+            id="node-template"
+            value={selectedTemplate}
+            onChange={(e) => handleTemplateChange(e.target.value)}
+            className="template-select"
+          >
+            {getAvailableTemplates().map(template => (
+              <option key={template.key} value={template.key}>
+                {template.icon} {template.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <div className="input-group">
           <label htmlFor="node-label">Label:</label>

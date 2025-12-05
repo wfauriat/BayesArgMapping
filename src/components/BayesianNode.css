@@ -21,6 +21,11 @@
   align-items: center;
 }
 
+.node-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
 .node-label {
   color: #ffffff;
   font-size: 16px;

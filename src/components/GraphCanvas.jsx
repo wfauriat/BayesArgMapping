@@ -58,7 +58,11 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges, layoutVersion }) {
         ...params,
         type: 'conditional',
         animated: true,
-        data: { probability: 0.5 }
+        data: {
+          probability: 0.5,
+          edgeType: 'influences',
+          edgeLabel: ''
+        }
       }
       const updatedEdges = addEdge(newEdge, localEdges)
       setLocalEdges(updatedEdges)

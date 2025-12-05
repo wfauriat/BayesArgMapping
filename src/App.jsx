@@ -18,7 +18,11 @@ function App() {
       position: { x: Math.random() * 400, y: Math.random() * 400 },
       data: {
         label: nodeData.label || 'New Node',
-        probability: nodeData.probability || 0.5
+        probability: nodeData.probability || 0.5,
+        template: nodeData.template,
+        color: nodeData.color,
+        backgroundColor: nodeData.backgroundColor,
+        icon: nodeData.icon
       }
     }
     setNodes((nds) => [...nds, newNode])

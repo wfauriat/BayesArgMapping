@@ -57,6 +57,29 @@
   border-color: #646cff;
 }
 
+.input-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-size: 14px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.input-group select:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.template-select option {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  padding: 8px;
+}
+
 .add-button {
   width: 100%;
   padding: 10px;
