@@ -1,0 +1,43 @@
+.graph-canvas {
+  flex: 1;
+  background-color: #0a0a0a;
+  position: relative;
+}
+
+.react-flow {
+  background-color: #0a0a0a;
+}
+
+.react-flow__node {
+  border-radius: 8px;
+}
+
+.react-flow__edge-path {
+  stroke: #646cff;
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #535bf2;
+  stroke-width: 3;
+}
+
+.react-flow__controls {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+}
+
+.react-flow__controls-button {
+  background-color: #242424;
+  border-bottom: 1px solid #333;
+  color: #ffffff;
+}
+
+.react-flow__controls-button:hover {
+  background-color: #333;
+}
+
+.react-flow__minimap {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+}
