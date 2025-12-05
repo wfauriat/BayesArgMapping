@@ -23,18 +23,22 @@ const edgeTypes = {
 }
 
 function GraphCanvas({ nodes, edges, setNodes, setEdges }) {
-  const [localNodes, setLocalNodes, onNodesChange] = useNodesState(nodes)
-  const [localEdges, setLocalEdges, onEdgesChange] = useEdgesState(edges)
+  const [localNodes, setLocalNodes, onNodesChange] = useNodesState([])
+  const [localEdges, setLocalEdges, onEdgesChange] = useEdgesState([])
   const [editModal, setEditModal] = useState({ open: false, type: null, item: null })
 
-  // Sync external nodes to local state
+  // Sync external nodes to local state only when externally added (not from internal updates)
   useEffect(() => {
-    setLocalNodes(nodes)
-  }, [nodes, setLocalNodes])
+    if (nodes.length !== localNodes.length) {
+      setLocalNodes(nodes)
+    }
+  }, [nodes, localNodes.length, setLocalNodes])
 
   useEffect(() => {
-    setLocalEdges(edges)
-  }, [edges, setLocalEdges])
+    if (edges.length !== localEdges.length) {
+      setLocalEdges(edges)
+    }
+  }, [edges, localEdges.length, setLocalEdges])
 
   const onConnect = useCallback(
     (params) => {
