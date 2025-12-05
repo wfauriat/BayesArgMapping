@@ -2,12 +2,14 @@ import { useState } from 'react'
 import ControlPanel from './components/ControlPanel'
 import GraphCanvas from './components/GraphCanvas'
 import ImportExportModal from './components/ImportExportModal'
+import { applyLayout } from './utils/layoutAlgorithms'
 import './App.css'
 
 function App() {
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
   const [showImportExport, setShowImportExport] = useState(false)
+  const [layoutVersion, setLayoutVersion] = useState(0)
 
   const addNode = (nodeData) => {
     const newNode = {
@@ -27,6 +29,13 @@ function App() {
     setEdges(importedEdges)
   }
 
+  const handleAutoLayout = () => {
+    // Apply simple layered layout algorithm
+    const layoutedNodes = applyLayout('simple', nodes, edges)
+    setNodes(layoutedNodes)
+    setLayoutVersion(v => v + 1) // Trigger re-sync in GraphCanvas
+  }
+
   return (
     <div className="app-container">
       <ControlPanel
@@ -34,12 +43,14 @@ function App() {
         edges={edges}
         onAddNode={addNode}
         onOpenImportExport={() => setShowImportExport(true)}
+        onAutoLayout={handleAutoLayout}
       />
       <GraphCanvas
         nodes={nodes}
         edges={edges}
         setNodes={setNodes}
         setEdges={setEdges}
+        layoutVersion={layoutVersion}
       />
 
       {showImportExport && (

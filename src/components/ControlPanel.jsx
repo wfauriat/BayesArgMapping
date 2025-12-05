@@ -2,7 +2,7 @@ import { useState } from 'react'
 import StatisticsPanel from './StatisticsPanel'
 import './ControlPanel.css'
 
-function ControlPanel({ nodes, edges, onAddNode, onOpenImportExport }) {
+function ControlPanel({ nodes, edges, onAddNode, onOpenImportExport, onAutoLayout }) {
   const [nodeLabel, setNodeLabel] = useState('')
   const [nodeProbability, setNodeProbability] = useState(0.5)
 
@@ -55,9 +55,12 @@ function ControlPanel({ nodes, edges, onAddNode, onOpenImportExport }) {
       </div>
 
       <div className="control-section">
-        <h3>File Operations</h3>
+        <h3>Graph Operations</h3>
         <button className="action-button-compact" onClick={onOpenImportExport}>
           📁 Import / Export
+        </button>
+        <button className="action-button-compact" onClick={onAutoLayout}>
+          🔄 Auto-Layout
         </button>
       </div>
 
@@ -72,6 +75,7 @@ function ControlPanel({ nodes, edges, onAddNode, onOpenImportExport }) {
           <li>Drag nodes to reposition them</li>
           <li>Connect nodes by dragging from handles</li>
           <li>Click edges to edit conditional probabilities</li>
+          <li>Use Auto-Layout to organize nodes in layers</li>
           <li>Probabilities auto-update via Bayesian inference</li>
         </ul>
       </div>

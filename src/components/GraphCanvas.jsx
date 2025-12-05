@@ -24,19 +24,27 @@ const edgeTypes = {
   conditional: ConditionalEdge,
 }
 
-function GraphCanvas({ nodes, edges, setNodes, setEdges }) {
+function GraphCanvas({ nodes, edges, setNodes, setEdges, layoutVersion }) {
   const [localNodes, setLocalNodes, onNodesChange] = useNodesState([])
   const [localEdges, setLocalEdges, onEdgesChange] = useEdgesState([])
   const [editModal, setEditModal] = useState({ open: false, type: null, item: null })
   const [cptModal, setCptModal] = useState({ open: false, node: null })
   const [interventionModal, setInterventionModal] = useState({ open: false, node: null })
 
-  // Sync external nodes to local state only when externally added (not from internal updates)
+  // Sync external nodes to local state only when nodes are added/removed
   useEffect(() => {
     if (nodes.length !== localNodes.length) {
       setLocalNodes(nodes)
     }
   }, [nodes, localNodes.length, setLocalNodes])
+
+  // Sync when auto-layout is triggered (layoutVersion changes)
+  useEffect(() => {
+    if (layoutVersion > 0) {
+      setLocalNodes(nodes)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [layoutVersion])
 
   useEffect(() => {
     if (edges.length !== localEdges.length) {
