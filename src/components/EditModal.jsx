@@ -1,25 +1,47 @@
 import { useState, useEffect } from 'react'
 import { getAvailableEdgeTypes, getAvailableTemplates, getNodeTemplate } from '../utils/nodeTemplates'
+import { calculateNodeProbability } from '../utils/bayesianInference'
 import './EditModal.css'
 
-function EditModal({ type, item, onSave, onClose, onDelete, onOpenCPT, onOpenIntervention }) {
+function EditModal({ type, item, onSave, onClose, onDelete, onOpenCPT, onOpenIntervention, nodes, edges }) {
   const [label, setLabel] = useState('')
   const [probability, setProbability] = useState(0.5)
   const [nodeTemplate, setNodeTemplate] = useState('default')
   const [edgeLabel, setEdgeLabel] = useState('')
   const [edgeType, setEdgeType] = useState('influences')
+  const [hasParents, setHasParents] = useState(false)
+  const [computedProbability, setComputedProbability] = useState(null)
 
   useEffect(() => {
     if (type === 'node' && item) {
       setLabel(item.data?.label || '')
       setProbability(item.data?.probability || 0.5)
       setNodeTemplate(item.data?.template || 'default')
+
+      // Check if this node has parents
+      if (nodes && edges) {
+        const parentEdges = edges.filter(e => e.target === item.id)
+        const hasParentNodes = parentEdges.length > 0
+        setHasParents(hasParentNodes)
+
+        // If has parents, compute marginal probability
+        if (hasParentNodes) {
+          const parentNodes = parentEdges
+            .map(e => nodes.find(n => n.id === e.source))
+            .filter(Boolean)
+
+          const marginalProb = calculateNodeProbability(item, parentNodes, edges)
+          setComputedProbability(marginalProb)
+        } else {
+          setComputedProbability(null)
+        }
+      }
     } else if (type === 'edge' && item) {
       setProbability(item.data?.probability || 0.5)
       setEdgeLabel(item.data?.edgeLabel || '')
       setEdgeType(item.data?.edgeType || 'influences')
     }
-  }, [type, item])
+  }, [type, item, nodes, edges])
 
   const handleTemplateChange = (templateKey) => {
     setNodeTemplate(templateKey)
@@ -139,19 +161,33 @@ function EditModal({ type, item, onSave, onClose, onDelete, onOpenCPT, onOpenInt
 
           <div className="input-group">
             <label htmlFor="edit-probability">
-              {type === 'node' ? 'Prior Probability:' : 'Conditional Probability:'}
+              {type === 'node'
+                ? (hasParents ? 'Marginal Probability (computed):' : 'Prior Probability:')
+                : 'Conditional Probability:'}
             </label>
+            {type === 'node' && hasParents && (
+              <div className="probability-info">
+                This probability is automatically computed from parent nodes.
+                {computedProbability !== null && (
+                  <span className="computed-value"> Current value: {(computedProbability * 100).toFixed(1)}%</span>
+                )}
+              </div>
+            )}
             <input
               id="edit-probability"
               type="number"
               min="0"
               max="1"
               step="0.01"
-              value={probability}
+              value={type === 'node' && hasParents && computedProbability !== null ? computedProbability : probability}
               onChange={(e) => setProbability(e.target.value)}
+              disabled={type === 'node' && hasParents}
+              className={type === 'node' && hasParents ? 'disabled-input' : ''}
             />
             <div className="probability-display">
-              {(probability * 100).toFixed(0)}%
+              {type === 'node' && hasParents && computedProbability !== null
+                ? (computedProbability * 100).toFixed(0)
+                : (probability * 100).toFixed(0)}%
             </div>
           </div>
 
@@ -161,8 +197,10 @@ function EditModal({ type, item, onSave, onClose, onDelete, onOpenCPT, onOpenInt
               min="0"
               max="1"
               step="0.01"
-              value={probability}
+              value={type === 'node' && hasParents && computedProbability !== null ? computedProbability : probability}
               onChange={(e) => setProbability(e.target.value)}
+              disabled={type === 'node' && hasParents}
+              className={type === 'node' && hasParents ? 'disabled-slider' : ''}
             />
           </div>
         </div>

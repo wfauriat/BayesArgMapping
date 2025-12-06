@@ -1,0 +1,153 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-12-06T21:27:47.082Z",
+  "nodes": [
+    {
+      "id": "node-1764941835589",
+      "type": "bayesianNode",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "data": {
+        "label": "Winter",
+        "probability": 0.5,
+        "template": "hypothesis",
+        "color": "#fbbf24",
+        "backgroundColor": "#2e2a1a",
+        "icon": "💡"
+      }
+    },
+    {
+      "id": "node-1764941842629",
+      "type": "bayesianNode",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "data": {
+        "label": "Rain",
+        "probability": 0.47400000000000003,
+        "cpt": {
+          "false,false": 0.53,
+          "false,true": 0.44,
+          "true,false": 0.45,
+          "true,true": 0.5
+        },
+        "useCPT": true
+      }
+    },
+    {
+      "id": "node-1764941918029",
+      "type": "bayesianNode",
+      "position": {
+        "x": 300,
+        "y": 100
+      },
+      "data": {
+        "label": "Clouds",
+        "probability": 0.8,
+        "template": "evidence",
+        "color": "#4ade80",
+        "backgroundColor": "#1a2e1a",
+        "icon": "📊"
+      }
+    },
+    {
+      "id": "node-1764944999112",
+      "type": "bayesianNode",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "data": {
+        "label": "Get wet",
+        "probability": 0.237
+      }
+    },
+    {
+      "id": "node-1764945017858",
+      "type": "bayesianNode",
+      "position": {
+        "x": 100,
+        "y": 550
+      },
+      "data": {
+        "label": "Get angry",
+        "probability": 0.3274155000000001,
+        "template": "conclusion",
+        "color": "#f87171",
+        "backgroundColor": "#2e1a1a",
+        "icon": "🎯"
+      }
+    },
+    {
+      "id": "node-1764945026818",
+      "type": "bayesianNode",
+      "position": {
+        "x": 300,
+        "y": 400
+      },
+      "data": {
+        "label": "Get sick",
+        "probability": 0.237
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "reactflow__edge-node-1764941835589-node-1764941842629",
+      "source": "node-1764941835589",
+      "target": "node-1764941842629",
+      "type": "conditional",
+      "data": {
+        "probability": 0.5
+      }
+    },
+    {
+      "id": "reactflow__edge-node-1764941918029-node-1764941842629",
+      "source": "node-1764941918029",
+      "target": "node-1764941842629",
+      "type": "conditional",
+      "data": {
+        "probability": 0.5
+      }
+    },
+    {
+      "id": "reactflow__edge-node-1764941842629-node-1764944999112",
+      "source": "node-1764941842629",
+      "target": "node-1764944999112",
+      "type": "conditional",
+      "data": {
+        "probability": 0.5
+      }
+    },
+    {
+      "id": "reactflow__edge-node-1764941842629-node-1764945017858",
+      "source": "node-1764941842629",
+      "target": "node-1764945017858",
+      "type": "conditional",
+      "data": {
+        "probability": 0.5
+      }
+    },
+    {
+      "id": "reactflow__edge-node-1764941842629-node-1764945026818",
+      "source": "node-1764941842629",
+      "target": "node-1764945026818",
+      "type": "conditional",
+      "data": {
+        "probability": 0.5
+      }
+    },
+    {
+      "id": "reactflow__edge-node-1764945026818-node-1764945017858",
+      "source": "node-1764945026818",
+      "target": "node-1764945017858",
+      "type": "conditional",
+      "data": {
+        "probability": 0.5
+      }
+    }
+  ]
+}

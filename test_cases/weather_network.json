@@ -1,0 +1,174 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-12-06T00:00:00.000Z",
+  "nodes": [
+    {
+      "id": "node-winter",
+      "type": "bayesianNode",
+      "position": {
+        "x": 150,
+        "y": 50
+      },
+      "data": {
+        "label": "Winter Season",
+        "probability": 0.25,
+        "template": "hypothesis",
+        "color": "#60a5fa",
+        "backgroundColor": "#1a2a4a",
+        "icon": "❄️"
+      }
+    },
+    {
+      "id": "node-low-pressure",
+      "type": "bayesianNode",
+      "position": {
+        "x": 400,
+        "y": 50
+      },
+      "data": {
+        "label": "Low Pressure",
+        "probability": 0.3,
+        "template": "hypothesis",
+        "color": "#f87171",
+        "backgroundColor": "#4a1a1a",
+        "icon": "🌀"
+      }
+    },
+    {
+      "id": "node-clouds",
+      "type": "bayesianNode",
+      "position": {
+        "x": 275,
+        "y": 180
+      },
+      "data": {
+        "label": "Cloudy Sky",
+        "probability": 0.5,
+        "template": "observation",
+        "color": "#94a3b8",
+        "backgroundColor": "#2a2a3a",
+        "icon": "☁️"
+      }
+    },
+    {
+      "id": "node-rain",
+      "type": "bayesianNode",
+      "position": {
+        "x": 275,
+        "y": 310
+      },
+      "data": {
+        "label": "Rain",
+        "probability": 0.3,
+        "template": "observation",
+        "color": "#3b82f6",
+        "backgroundColor": "#1a2a3a",
+        "icon": "🌧️"
+      }
+    },
+    {
+      "id": "node-wet-ground",
+      "type": "bayesianNode",
+      "position": {
+        "x": 150,
+        "y": 450
+      },
+      "data": {
+        "label": "Wet Ground",
+        "probability": 0.5,
+        "template": "evidence",
+        "color": "#4ade80",
+        "backgroundColor": "#0a2a1a",
+        "icon": "💧"
+      }
+    },
+    {
+      "id": "node-umbrella-out",
+      "type": "bayesianNode",
+      "position": {
+        "x": 400,
+        "y": 450
+      },
+      "data": {
+        "label": "People w/ Umbrellas",
+        "probability": 0.5,
+        "template": "evidence",
+        "color": "#4ade80",
+        "backgroundColor": "#0a2a1a",
+        "icon": "☂️"
+      }
+    },
+    {
+      "id": "node-sprinkler",
+      "type": "bayesianNode",
+      "position": {
+        "x": 50,
+        "y": 310
+      },
+      "data": {
+        "label": "Sprinkler On",
+        "probability": 0.1,
+        "template": "hypothesis",
+        "color": "#f87171",
+        "backgroundColor": "#4a1a1a",
+        "icon": "💦"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-winter-clouds",
+      "source": "node-winter",
+      "target": "node-clouds",
+      "type": "conditional",
+      "data": {
+        "probability": 0.6
+      }
+    },
+    {
+      "id": "edge-low-pressure-clouds",
+      "source": "node-low-pressure",
+      "target": "node-clouds",
+      "type": "conditional",
+      "data": {
+        "probability": 0.8
+      }
+    },
+    {
+      "id": "edge-clouds-rain",
+      "source": "node-clouds",
+      "target": "node-rain",
+      "type": "conditional",
+      "data": {
+        "probability": 0.5
+      }
+    },
+    {
+      "id": "edge-rain-wet",
+      "source": "node-rain",
+      "target": "node-wet-ground",
+      "type": "conditional",
+      "data": {
+        "probability": 0.95
+      }
+    },
+    {
+      "id": "edge-sprinkler-wet",
+      "source": "node-sprinkler",
+      "target": "node-wet-ground",
+      "type": "conditional",
+      "data": {
+        "probability": 0.9
+      }
+    },
+    {
+      "id": "edge-rain-umbrella",
+      "source": "node-rain",
+      "target": "node-umbrella-out",
+      "type": "conditional",
+      "data": {
+        "probability": 0.85
+      }
+    }
+  ]
+}

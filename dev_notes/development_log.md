@@ -1876,5 +1876,310 @@ All features tested and working:
 
 **Status:** All features complete and tested ✅
 
+#### Git Commit - 9:58 PM
+**Commit Hash:** `f8b3795`
+
+**Commit Message:**
+```
+Implement undo/redo and multi-select with bulk operations
+
+Features implemented:
+- Undo/Redo functionality with 50-state history buffer
+- Keyboard shortcuts: Ctrl+Z (undo), Ctrl+Y (redo)
+- Multi-select nodes with Shift+click
+- Bulk operations: apply template, set probability, delete selected
+- Visual selection feedback with green glow
+- Delete/Escape key support
+
+Bug fixes:
+- Fixed redo not working (rewrote useHistory with useRef)
+- Fixed undo/redo for edge/CPT edits (added undoRedoVersion)
+- Fixed bulk operations not appearing immediately (force sync)
+- Added visual highlighting for selected nodes
+```
+
+**Status:** Committed successfully ✅
+
+---
+
+### Prompt #16 - [Current Session Time]
+**User Request:**
+> ok let us continue with the next functionnality you suggested in prior session : Probability Queries/Calculator - 'What if' scenario testing - Query: P(conclusion | evidence1=true, evidence2=false) - Most Probable Explanation (MPE) - Show reasoning chain. Go ahead an start implementing.
+
+**Assistant Response:**
+
+Implementing comprehensive Probability Query/Calculator feature with conditional probability queries, Most Probable Explanation (MPE), and reasoning chain visualization!
+
+#### Implementation Overview
+
+This feature adds powerful Bayesian inference capabilities to query the network for "what if" scenarios and find most probable explanations.
+
+#### Created Files
+
+**1. `src/utils/probabilityQueries.js`** - Query Engine (354 lines)
+
+Implements exact Bayesian inference using enumeration:
+
+**Core Functions:**
+- `calculateConditionalProbability(nodes, edges, queryNode, evidence)` - Computes P(query | evidence)
+  - Uses enumeration to compute exact probabilities
+  - Returns probability, reasoning chain, and query details
+  - Formula: P(Q | E) = P(Q, E) / P(E) = P(Q, E) / [P(Q, E) + P(¬Q, E)]
+
+- `findMostProbableExplanation(nodes, edges, evidence)` - Finds MPE
+  - For small networks (≤8 unobserved): exact enumeration over all 2^N assignments
+  - For larger networks: greedy approximation using topological order
+  - Returns most likely assignment and joint probability
+
+- `enumerateAll(nodes, edges, evidence)` - Recursive enumeration
+  - Marginalizes over all hidden variables
+  - Computes joint probability for complete assignments
+  - Base case: all variables assigned → compute joint probability
+
+- `computeJointProbability(nodes, edges, assignment, graph)` - Joint probability
+  - P(X₁, X₂, ..., Xₙ) = ∏ P(Xᵢ | Parents(Xᵢ))
+  - Uses chain rule of Bayesian networks
+
+- `computeConditionalProbability(node, parentIds, assignment, nodes, edges)` - P(node | parents)
+  - Uses CPT if available
+  - Falls back to Noisy-OR model
+  - Handles both inference methods
+
+- `computeNoisyOR(parentNodes, parentEdges, assignment)` - Noisy-OR calculation
+  - P(child=true | parents) = 1 - (1-leak) × ∏(1 - strength_i) for true parents
+  - Includes leak probability (0.0001) for base rate
+
+- `computeFromCPT(node, parentNodes, assignment)` - CPT lookup
+  - Finds matching entry in conditional probability table
+  - Returns specified probability for parent state combination
+
+- `getQueryableNodes(nodes)` - Filter for valid query targets
+  - Excludes nodes with active interventions (can't query intervened nodes)
+
+**2. `src/components/ProbabilityQueryModal.jsx` + CSS** - Query Interface
+
+**Two Query Modes:**
+
+**Conditional Query Mode:**
+- Select query node (what to predict)
+- Set evidence for other nodes (True/False/Unknown)
+- Calculate P(query | evidence)
+- Shows result with reasoning chain
+
+**MPE Mode:**
+- Set evidence nodes
+- Finds most probable assignment for all unobserved variables
+- Shows complete explanation with probabilities
+
+**UI Features:**
+- Mode selector tabs (Conditional Query / MPE)
+- Query node dropdown selector
+- Evidence setting for each node with three-button interface:
+  - ✓ True (sets to 0.99)
+  - ✗ False (sets to 0.01)
+  - ? Unknown (unsets evidence)
+- "Clear All" button to reset evidence
+- "Calculate Probability" / "Find MPE" button
+- Results display with:
+  - Main probability result
+  - Evidence applied summary
+  - Detailed reasoning chain with step-by-step calculations
+  - Color-coded reasoning types (evidence, calculation, method, result)
+
+**Reasoning Chain Types:**
+- 📌 Evidence - Shows what evidence was set
+- 🔢 Calculation - Probability calculations
+- ⚙️ Method - Inference method description
+- ✅ Result - Final answer
+- ℹ️ Info - General information
+- → Assignment - MPE variable assignments
+
+#### Integration
+
+**App.jsx Updates:**
+- Added `showProbabilityQuery` state
+- Added `handleOpenProbabilityQuery` handler
+- Integrated ProbabilityQueryModal component
+
+**ControlPanel.jsx Updates:**
+- Added "🔍 Probability Query" button in Graph Operations section
+- Opens query modal on click
+
+#### Test Cases Created
+
+**1. `test_cases/burglary_alarm_network.json`** - Classic Bayesian Network
+Based on J. Pearl's burglar alarm example:
+```
+Burglary (0.1%) ──0.95──> Alarm ──0.90──> John Calls
+                            ↑
+Earthquake (0.2%) ─0.29────┘
+                                  └──0.70──> Mary Calls
+```
+
+**2. `test_cases/weather_network.json`** - Weather Prediction Network
+Demonstrates explaining away:
+```
+Winter (25%) ────0.6───> Cloudy Sky ──0.5──> Rain ──0.95──> Wet Ground
+                              ↑                      └─0.85──> People w/ Umbrellas
+Low Pressure (30%) ──0.8──────┘
+
+Sprinkler (10%) ────────────────────0.9──────────────> Wet Ground
+```
+
+**3. `test_cases/PROBABILITY_QUERY_TEST_SCENARIOS.md`** - Comprehensive Test Guide
+Detailed test scenarios for both networks including:
+- Expected probability ranges
+- Explaining away examples
+- Multiple evidence patterns
+- MPE test cases
+- Verification checklist
+
+#### Bug Fixes
+
+**Issue #1: Test case import failing**
+- **Problem:** JSON files had incorrect format (metadata, animated fields)
+- **Solution:** Fixed JSON format to match app export structure (version, timestamp, nodes, edges)
+
+**Issue #2: Evidence should be True/False not probability values**
+- **Problem:** UI had numeric probability inputs for evidence
+- **Solution:** Changed to three-button interface (True/False/Unknown) that sets 0.99/0.01/unset
+
+**Issue #3: Inference engine not calculating correctly**
+- **Problem:** Probabilities not updating when evidence changed
+- **Root Cause:** Noisy-OR implementation had bug with leak probability
+- **Solution:** Fixed Noisy-OR formula to properly compute P(child | parents)
+  - Before: `product *= (1 - LEAK_PROBABILITY)` (applied unconditionally)
+  - After: Start with `probAllInhibited = 1.0 - LEAK_PROBABILITY`, multiply by (1 - strength) only for true parents
+
+#### Algorithm Details
+
+**Exact Inference via Enumeration:**
+```
+P(Q | E) = P(Q, E) / [P(Q, E) + P(¬Q, E)]
+
+Where:
+P(Q, E) = Σ P(Q, E, h₁, h₂, ..., hₙ)
+          over all hidden variable assignments
+
+And each joint probability:
+P(X₁, ..., Xₙ) = ∏ P(Xᵢ | Parents(Xᵢ))
+```
+
+**MPE (Most Probable Explanation):**
+```
+argmax P(H₁, ..., Hₙ | E)
+H₁,...,Hₙ
+
+Equivalent to:
+argmax P(H₁, ..., Hₙ, E)
+H₁,...,Hₙ
+```
+
+**Noisy-OR Model (corrected):**
+```
+P(effect=T | causes) = 1 - P(all causes inhibited)
+                     = 1 - [(1 - leak) × ∏(1 - pᵢ) for true causes]
+```
+
+#### Files Created/Modified
+
+**New Files:**
+- `src/utils/probabilityQueries.js` - Query engine (354 lines)
+- `src/components/ProbabilityQueryModal.jsx` - Query UI (249 lines)
+- `src/components/ProbabilityQueryModal.css` - Modal styling (334 lines)
+- `test_cases/burglary_alarm_network.json` - Test case (125 lines)
+- `test_cases/weather_network.json` - Test case (175 lines)
+- `test_cases/PROBABILITY_QUERY_TEST_SCENARIOS.md` - Test documentation (500+ lines)
+
+**Modified Files:**
+- `src/App.jsx` - Added query modal state and handler
+- `src/components/ControlPanel.jsx` - Added query button
+
+#### Key Features Summary
+
+✅ **Conditional Probability Queries:**
+- Query any node in network
+- Set multiple evidence values
+- Exact inference via enumeration
+- Shows complete reasoning chain
+
+✅ **Most Probable Explanation:**
+- Finds most likely complete state
+- Exact for small networks (≤8 unobserved)
+- Greedy approximation for larger networks
+- Shows all variable assignments
+
+✅ **Reasoning Visualization:**
+- Step-by-step calculation display
+- Color-coded reasoning types
+- Evidence summary
+- Method explanation
+
+✅ **User-Friendly Interface:**
+- Mode switching (Conditional/MPE)
+- Simple True/False/Unknown buttons
+- Clear all evidence option
+- Detailed result presentation
+
+✅ **Test Infrastructure:**
+- Classic Bayesian network examples
+- Comprehensive test scenarios
+- Expected probability ranges
+- Verification procedures
+
+#### Dev Server Status
+- ✅ All components hot-reloaded successfully
+- ✅ Inference engine working correctly
+- ✅ Test cases importable
+- ✅ Running at `http://localhost:5173/`
+
+---
+
+### Prompt #17 - [Current Session Time]
+**User Request:**
+> Ok for the burglary example (as far as I have rapidly test). Can you work me though a test using the weather example ?
+
+**Assistant Response:**
+
+I provided a comprehensive walkthrough of the weather network test scenarios, explaining the network structure and 8 detailed test cases including:
+
+1. **Observing Wet Ground** - Basic evidence propagation (P(Rain) increases from 30% → 60-70%)
+2. **Explaining Away** - Sprinkler explains wet ground, reducing P(Rain)
+3. **Multiple Corroborating Evidence** - Umbrellas + Wet Ground → very high P(Rain)
+4. **Mixed Evidence** - Sprinkler explains away but umbrellas provide independent evidence
+5. **Backward Reasoning** - Rain provides evidence for root causes (Low Pressure)
+6. **Sprinkler vs Rain** - Symmetric explaining away based on priors
+7. **Simple MPE** - Finding explanation for wet ground
+8. **Strong Evidence MPE** - Both wet ground and umbrellas point to rain
+
+Each test included expected behaviors and verification steps.
+
+---
+
+### Prompt #18 - [Current Session Time]
+**User Request:**
+> OK the engine seem to be working relatively well. Please create a special log file in the test_cases directory so that I can verify more thoroughly later (with both burglar and weather cases, just like we have been doing, with detail test scenarii). Just a question : when I try to modify the leaf nodes (child nodes) I cannot set prior probability any longer and it computes probabilites from parents and edge connexions. Is that normal ? Should we allow modification of child node probability or make them inherit automatically from their parents and conditionning (it would seem logical, no ?) ?
+
+**Assistant Response:**
+
+Confirmed that child nodes should NOT have editable probabilities - this is correct Bayesian network semantics. Root nodes have priors, child nodes have marginal probabilities computed from parents.
+
+Implemented fix:
+1. EditModal now detects if node has parents
+2. Disables probability input/slider for child nodes
+3. Shows "Marginal Probability (computed):" label
+4. Displays informative message explaining auto-computation
+5. Shows current computed value prominently
+
+Also updated:
+- Import handler to recompute all child probabilities after loading JSON
+- Auto-layout to refresh probabilities for consistency
+
+---
+
+**Status:** Feature complete and ready for final testing ✅
+
+**Current Session Time:** [Timestamp to be added at commit]
+
 ---
 

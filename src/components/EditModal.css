@@ -73,7 +73,9 @@
 }
 
 .modal-body .input-group input[type="text"],
-.modal-body .input-group input[type="number"] {
+.modal-body .input-group input[type="number"],
+.modal-body .input-group select,
+.template-select {
   width: 100%;
   padding: 10px;
   border: 1px solid #333;
@@ -84,7 +86,9 @@
   box-sizing: border-box;
 }
 
-.modal-body .input-group input:focus {
+.modal-body .input-group input:focus,
+.modal-body .input-group select:focus,
+.template-select:focus {
   outline: none;
   border-color: #646cff;
 }
@@ -220,4 +224,48 @@
 
 .intervention-button:hover {
   background-color: #f57c00;
+}
+
+/* Disabled input styles */
+.disabled-input {
+  background-color: #0f0f0f !important;
+  color: #666 !important;
+  cursor: not-allowed !important;
+  opacity: 0.7;
+}
+
+.disabled-slider {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+}
+
+.disabled-slider::-webkit-slider-thumb {
+  cursor: not-allowed !important;
+  background: #555 !important;
+}
+
+.disabled-slider::-moz-range-thumb {
+  cursor: not-allowed !important;
+  background: #555 !important;
+}
+
+/* Probability info message */
+.probability-info {
+  margin-top: 8px;
+  margin-bottom: 12px;
+  padding: 10px;
+  background-color: #1a2a3a;
+  border-left: 3px solid #646cff;
+  border-radius: 4px;
+  color: #aaa;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.computed-value {
+  display: block;
+  margin-top: 6px;
+  color: #646cff;
+  font-weight: 600;
+  font-size: 14px;
 }

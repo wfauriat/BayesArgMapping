@@ -8,6 +8,7 @@ function ControlPanel({
   edges,
   onAddNode,
   onOpenImportExport,
+  onOpenProbabilityQuery,
   onAutoLayout,
   onUndo,
   onRedo,
@@ -133,6 +134,9 @@ function ControlPanel({
         </div>
         <button className="action-button-compact" onClick={onOpenImportExport}>
           📁 Import / Export
+        </button>
+        <button className="action-button-compact" onClick={onOpenProbabilityQuery}>
+          🔍 Probability Query
         </button>
         <button className="action-button-compact" onClick={onAutoLayout}>
           🔄 Auto-Layout

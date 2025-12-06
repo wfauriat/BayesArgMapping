@@ -2,7 +2,9 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import ControlPanel from './components/ControlPanel'
 import GraphCanvas from './components/GraphCanvas'
 import ImportExportModal from './components/ImportExportModal'
+import ProbabilityQueryModal from './components/ProbabilityQueryModal'
 import { applyLayout } from './utils/layoutAlgorithms'
+import { propagateProbabilities } from './utils/bayesianInference'
 import { useHistory } from './hooks/useHistory'
 import './App.css'
 
@@ -10,6 +12,7 @@ function App() {
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
   const [showImportExport, setShowImportExport] = useState(false)
+  const [showProbabilityQuery, setShowProbabilityQuery] = useState(false)
   const [layoutVersion, setLayoutVersion] = useState(0)
   const [undoRedoVersion, setUndoRedoVersion] = useState(0)
   const [selectedNodes, setSelectedNodes] = useState([])
@@ -105,14 +108,18 @@ function App() {
   }
 
   const handleImport = (importedNodes, importedEdges) => {
-    setNodes(importedNodes)
+    // Recompute all child node probabilities to ensure consistency
+    const nodesWithUpdatedProbabilities = propagateProbabilities(importedNodes, importedEdges)
+    setNodes(nodesWithUpdatedProbabilities)
     setEdges(importedEdges)
   }
 
   const handleAutoLayout = () => {
     // Apply simple layered layout algorithm
     const layoutedNodes = applyLayout('simple', nodes, edges)
-    setNodes(layoutedNodes)
+    // Also recompute child node probabilities for consistency
+    const nodesWithUpdatedProbabilities = propagateProbabilities(layoutedNodes, edges)
+    setNodes(nodesWithUpdatedProbabilities)
     setLayoutVersion(v => v + 1) // Trigger re-sync in GraphCanvas
   }
 
@@ -165,6 +172,7 @@ function App() {
         edges={edges}
         onAddNode={addNode}
         onOpenImportExport={() => setShowImportExport(true)}
+        onOpenProbabilityQuery={() => setShowProbabilityQuery(true)}
         onAutoLayout={handleAutoLayout}
         onUndo={handleUndo}
         onRedo={handleRedo}
@@ -192,6 +200,14 @@ function App() {
           edges={edges}
           onImport={handleImport}
           onClose={() => setShowImportExport(false)}
+        />
+      )}
+
+      {showProbabilityQuery && (
+        <ProbabilityQueryModal
+          nodes={nodes}
+          edges={edges}
+          onClose={() => setShowProbabilityQuery(false)}
         />
       )}
     </div>

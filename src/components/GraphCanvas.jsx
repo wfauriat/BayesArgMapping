@@ -288,6 +288,8 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges, layoutVersion, undoRedo
         <EditModal
           type={editModal.type}
           item={editModal.item}
+          nodes={localNodes}
+          edges={localEdges}
           onSave={editModal.type === 'node' ? handleSaveNode : handleSaveEdge}
           onClose={() => setEditModal({ open: false, type: null, item: null })}
           onDelete={editModal.type === 'node' ? handleDeleteNode : handleDeleteEdge}

@@ -1,0 +1,124 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-12-06T00:00:00.000Z",
+  "nodes": [
+    {
+      "id": "node-burglary",
+      "type": "bayesianNode",
+      "position": {
+        "x": 100,
+        "y": 50
+      },
+      "data": {
+        "label": "Burglary",
+        "probability": 0.001,
+        "template": "hypothesis",
+        "color": "#f87171",
+        "backgroundColor": "#4a1a1a",
+        "icon": "🦹"
+      }
+    },
+    {
+      "id": "node-earthquake",
+      "type": "bayesianNode",
+      "position": {
+        "x": 400,
+        "y": 50
+      },
+      "data": {
+        "label": "Earthquake",
+        "probability": 0.002,
+        "template": "hypothesis",
+        "color": "#f87171",
+        "backgroundColor": "#4a1a1a",
+        "icon": "🌋"
+      }
+    },
+    {
+      "id": "node-alarm",
+      "type": "bayesianNode",
+      "position": {
+        "x": 250,
+        "y": 200
+      },
+      "data": {
+        "label": "Alarm",
+        "probability": 0.5,
+        "template": "observation",
+        "color": "#fbbf24",
+        "backgroundColor": "#3a2a0a",
+        "icon": "🚨"
+      }
+    },
+    {
+      "id": "node-john-calls",
+      "type": "bayesianNode",
+      "position": {
+        "x": 150,
+        "y": 350
+      },
+      "data": {
+        "label": "John Calls",
+        "probability": 0.5,
+        "template": "evidence",
+        "color": "#4ade80",
+        "backgroundColor": "#0a2a1a",
+        "icon": "📞"
+      }
+    },
+    {
+      "id": "node-mary-calls",
+      "type": "bayesianNode",
+      "position": {
+        "x": 350,
+        "y": 350
+      },
+      "data": {
+        "label": "Mary Calls",
+        "probability": 0.5,
+        "template": "evidence",
+        "color": "#4ade80",
+        "backgroundColor": "#0a2a1a",
+        "icon": "📱"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-burglary-alarm",
+      "source": "node-burglary",
+      "target": "node-alarm",
+      "type": "conditional",
+      "data": {
+        "probability": 0.95
+      }
+    },
+    {
+      "id": "edge-earthquake-alarm",
+      "source": "node-earthquake",
+      "target": "node-alarm",
+      "type": "conditional",
+      "data": {
+        "probability": 0.29
+      }
+    },
+    {
+      "id": "edge-alarm-john",
+      "source": "node-alarm",
+      "target": "node-john-calls",
+      "type": "conditional",
+      "data": {
+        "probability": 0.90
+      }
+    },
+    {
+      "id": "edge-alarm-mary",
+      "source": "node-alarm",
+      "target": "node-mary-calls",
+      "type": "conditional",
+      "data": {
+        "probability": 0.70
+      }
+    }
+  ]
+}
