@@ -1633,3 +1633,248 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ---
 
+## Session Resumed: 2025-12-06 9:14 PM
+
+---
+
+### Prompt #15 - 9:14 PM
+**User Request:**
+> OK. please implement undo and redo feature, as well as multi-select & bulk operation
+
+**Assistant Response:**
+
+Implementing both undo/redo functionality and multi-select with bulk operations!
+
+#### Feature 1: Undo/Redo Functionality ✅
+
+**Created: `src/hooks/useHistory.js`** - Custom History Management Hook
+
+**Key Features:**
+- Maintains stack of graph states (nodes and edges)
+- 50-state history limit to prevent memory issues
+- Tracks current position in history for undo/redo
+- Provides `canUndo` and `canRedo` flags for UI
+
+**Functions:**
+- `addToHistory(nodes, edges)` - Add new state to history stack
+- `undo()` - Move back in history, returns previous state
+- `redo()` - Move forward in history, returns next state
+- `getCurrentState()` - Get current graph state
+- `canUndo` / `canRedo` - Boolean flags for button states
+
+**App.jsx Integration:**
+- Imported `useHistory` hook
+- Debounced history tracking (500ms delay) to avoid excessive entries during rapid changes
+- Keyboard shortcuts:
+  - **Ctrl+Z** (or Cmd+Z on Mac) - Undo
+  - **Ctrl+Y** or **Ctrl+Shift+Z** - Redo
+- Passes undo/redo handlers and state to ControlPanel
+
+**ControlPanel UI:**
+- Added Undo/Redo buttons in Graph Operations section
+- Buttons show disabled state when no undo/redo available
+- Tooltips show keyboard shortcuts
+- Button row layout for compact display
+
+**Technical Implementation:**
+- History stored as array of `{ nodes, edges }` objects
+- Current index tracks position in history
+- Slices future states when new action performed (branching)
+- 50-state circular buffer prevents memory bloat
+
+#### Feature 2: Multi-Select Functionality ✅
+
+**GraphCanvas Updates:**
+- **Shift+Click** to select/deselect nodes
+- Multiple nodes can be selected simultaneously
+- Visual feedback using React Flow's native selection styling
+- **Click on empty canvas** - Deselects all nodes
+- **Escape key** - Deselects all nodes
+
+**Selection State Management:**
+- `selectedNodes` array in App.jsx stores IDs of selected nodes
+- Synced to GraphCanvas via props
+- GraphCanvas updates node `selected` property for visual feedback
+- React Flow handles selection styling automatically
+
+**Keyboard Shortcuts:**
+- **Delete** or **Backspace** - Delete all selected nodes and their edges
+- **Escape** - Clear selection
+
+#### Feature 3: Bulk Operations ✅
+
+**New Bulk Operations Panel in ControlPanel:**
+- Appears dynamically when nodes are selected
+- Shows count of selected nodes
+- Highlighted with blue border to indicate active state
+
+**Bulk Operations Available:**
+1. **Apply Template** - Change template type for all selected nodes
+   - Dropdown selector for node templates
+   - Updates color, icon, backgroundColor, and default probability
+
+2. **Set Probability** - Update probability for all selected nodes
+   - Number input with range 0-1
+   - Applies same probability to all selected
+
+3. **Delete Selected** - Remove all selected nodes
+   - Red delete button with trash icon
+   - Also removes all connected edges
+
+**Implementation in App.jsx:**
+- `handleBulkDelete()` - Removes selected nodes and their edges
+- `handleBulkUpdateProbability()` - Sets probability for all selected
+- `handleBulkUpdateTemplate()` - Applies template to all selected nodes
+- All bulk operations preserve undo/redo history
+
+**UI Enhancements:**
+- Bulk operations panel has distinct styling (darker background, blue border)
+- Delete button has red theme for danger action
+- Button row layout for Apply Template and Set Probability
+- Template selector auto-updates probability input
+
+#### Updated Instructions
+
+Added to ControlPanel instructions:
+- "Shift+click to multi-select nodes"
+- "Ctrl+Z to undo, Ctrl+Y to redo"
+
+#### CSS Updates
+
+**ControlPanel.css additions:**
+- `.button-row` - Flex layout for side-by-side buttons
+- `.action-button-compact:disabled` - Visual disabled state (50% opacity)
+- `.bulk-operations` - Highlighted panel styling
+- `.delete-button` - Red-themed delete button
+
+#### Files Created/Modified
+
+**New Files:**
+- `src/hooks/useHistory.js` - Undo/redo history management (68 lines)
+
+**Modified Files:**
+- `src/App.jsx` - Added history hook, keyboard shortcuts, bulk operation handlers, selection state
+- `src/components/ControlPanel.jsx` - Added undo/redo buttons, bulk operations panel
+- `src/components/ControlPanel.css` - Added styles for new UI elements
+- `src/components/GraphCanvas.jsx` - Multi-select logic, keyboard shortcuts, selection sync
+
+#### User Workflows
+
+**Undo/Redo:**
+1. Make changes to graph (add/edit/delete nodes or edges)
+2. Press Ctrl+Z to undo last change
+3. Press Ctrl+Y to redo
+4. Or use Undo/Redo buttons in control panel
+5. Buttons automatically disable when no undo/redo available
+
+**Multi-Select:**
+1. Hold Shift and click nodes to select multiple
+2. Selected nodes show visual highlight (React Flow native styling)
+3. Click empty canvas or press Escape to deselect all
+4. Press Delete/Backspace to delete all selected nodes
+
+**Bulk Operations:**
+1. Select multiple nodes with Shift+click
+2. Bulk Operations panel appears in control panel
+3. Choose template from dropdown (automatically updates probability)
+4. Click "Apply Template" to change all selected nodes
+5. Or adjust probability and click "Set Probability"
+6. Or click "Delete Selected" to remove all selected nodes
+7. All operations add to undo history
+
+#### Technical Highlights
+
+**History Management:**
+- Debounced to avoid creating history entry for every keystroke
+- Circular buffer maintains last 50 states
+- Handles undo/redo with proper state restoration
+- Works seamlessly with all graph operations
+
+**Selection Sync:**
+- App.jsx maintains `selectedNodes` array (source of truth)
+- GraphCanvas receives and updates selection via props
+- React Flow's `selected` property provides visual feedback
+- No custom selection styling needed - uses React Flow defaults
+
+**Keyboard Event Handling:**
+- Global keyboard listeners for undo/redo (App.jsx)
+- Canvas-specific listeners for delete/escape (GraphCanvas.jsx)
+- Proper event cleanup on component unmount
+- preventDefault() to avoid browser default behaviors
+
+#### Dev Server Status
+- ✅ All components hot-reloaded successfully
+- ✅ No errors in console
+- ✅ Running at `http://localhost:5173/`
+
+Features ready to test!
+
+#### Bug Fixes and Improvements - 9:30 PM to 9:58 PM
+
+**Issue #1: Redo not working**
+- **Problem:** Redo functionality wasn't working after undo operations
+- **Root Cause:** Multiple issues:
+  1. History hook used `useState` causing stale closures
+  2. Debounced history tracking was adding entries after undo/redo
+  3. `canUndo`/`canRedo` were values instead of functions
+- **Solution:**
+  - Rewrote history hook to use `useRef` instead of `useState`
+  - Added `skipHistoryRef` flag to prevent history addition during undo/redo
+  - Made `canUndo`/`canRedo` callback functions
+  - Added duplicate detection to avoid redundant history entries
+
+**Issue #2: Undo/Redo not working for edge edits and CPT changes**
+- **Problem:** Editing edge properties or CPTs didn't trigger proper undo/redo
+- **Root Cause:** GraphCanvas only synced when array lengths changed, not when properties changed
+- **Solution:**
+  - Added `undoRedoVersion` counter in App.jsx
+  - Increments on every undo/redo action
+  - GraphCanvas watches this version and force-syncs on change
+
+**Issue #3: Bulk template application didn't appear immediately**
+- **Problem:** Applying templates to selected nodes required undo/redo to see changes
+- **Root Cause:** Bulk operations updated App state but didn't trigger GraphCanvas sync
+- **Solution:**
+  - Added `setUndoRedoVersion(v => v + 1)` to bulk operation handlers
+  - Forces immediate sync to GraphCanvas
+
+**Issue #4: No visual feedback for selected nodes**
+- **Problem:** Users couldn't see which nodes were selected for bulk operations
+- **Solution:**
+  - Added CSS styling for `.bayesian-node.selected` class
+  - Green border (3px) with green glow effect
+  - Updated BayesianNode to accept `selected` prop
+  - React Flow automatically passes selection state
+  - Visual hierarchy: Normal (blue) → Selected (green) → Intervention (orange) → Selected+Intervention (yellow)
+
+**Files Modified:**
+- `src/hooks/useHistory.js` - Rewrote using useRef, removed console.logs
+- `src/App.jsx` - Added undoRedoVersion tracking, skipHistoryRef for undo/redo
+- `src/components/GraphCanvas.jsx` - Added undoRedoVersion sync effect
+- `src/components/BayesianNode.jsx` - Added selected prop and class handling
+- `src/components/BayesianNode.css` - Added selected node styling
+
+#### Final Testing - 9:58 PM
+
+All features tested and working:
+- ✅ Undo/Redo for node additions/deletions
+- ✅ Undo/Redo for node property edits
+- ✅ Undo/Redo for edge additions/deletions
+- ✅ Undo/Redo for edge property edits
+- ✅ Undo/Redo for CPT edits
+- ✅ Undo/Redo for interventions
+- ✅ Undo/Redo for bulk operations
+- ✅ Multi-select with Shift+click
+- ✅ Visual highlighting of selected nodes (green glow)
+- ✅ Bulk delete selected nodes
+- ✅ Bulk apply template (immediate update)
+- ✅ Bulk set probability
+- ✅ Delete key to remove selected nodes
+- ✅ Escape key to deselect all
+- ✅ Undo/Redo buttons in control panel
+- ✅ Keyboard shortcuts (Ctrl+Z, Ctrl+Y)
+
+**Status:** All features complete and tested ✅
+
+---
+

@@ -1,7 +1,7 @@
 import { Handle, Position } from 'reactflow'
 import './BayesianNode.css'
 
-function BayesianNode({ data }) {
+function BayesianNode({ data, selected }) {
   const hasIntervention = data?.intervention?.active
   const nodeStyle = {}
 
@@ -13,9 +13,14 @@ function BayesianNode({ data }) {
     nodeStyle.background = `linear-gradient(135deg, ${data.backgroundColor} 0%, ${adjustBrightness(data.backgroundColor, 10)} 100%)`
   }
 
+  // Build class names
+  const classNames = ['bayesian-node']
+  if (hasIntervention) classNames.push('intervention-active')
+  if (selected) classNames.push('selected')
+
   return (
     <div
-      className={`bayesian-node ${hasIntervention ? 'intervention-active' : ''}`}
+      className={classNames.join(' ')}
       style={nodeStyle}
     >
       <Handle

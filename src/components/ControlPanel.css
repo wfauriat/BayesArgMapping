@@ -135,7 +135,41 @@
   gap: 8px;
 }
 
-.action-button-compact:hover {
+.action-button-compact:hover:not(:disabled) {
   background-color: #333;
   border-color: #646cff;
+}
+
+.action-button-compact:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.button-row .action-button-compact {
+  flex: 1;
+}
+
+.bulk-operations {
+  background-color: #2a2a2a;
+  border: 2px solid #646cff;
+}
+
+.bulk-operations h3 {
+  color: #8b8fff;
+}
+
+.delete-button {
+  background-color: #4a1a1a !important;
+  border-color: #f87171 !important;
+}
+
+.delete-button:hover:not(:disabled) {
+  background-color: #5a2020 !important;
+  border-color: #ff8888 !important;
 }

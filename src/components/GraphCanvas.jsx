@@ -24,7 +24,7 @@ const edgeTypes = {
   conditional: ConditionalEdge,
 }
 
-function GraphCanvas({ nodes, edges, setNodes, setEdges, layoutVersion }) {
+function GraphCanvas({ nodes, edges, setNodes, setEdges, layoutVersion, undoRedoVersion, selectedNodes, setSelectedNodes }) {
   const [localNodes, setLocalNodes, onNodesChange] = useNodesState([])
   const [localEdges, setLocalEdges, onEdgesChange] = useEdgesState([])
   const [editModal, setEditModal] = useState({ open: false, type: null, item: null })
@@ -38,6 +38,16 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges, layoutVersion }) {
     }
   }, [nodes, localNodes.length, setLocalNodes])
 
+  // Update nodes with selection state for visual feedback
+  useEffect(() => {
+    setLocalNodes((nds) =>
+      nds.map((node) => ({
+        ...node,
+        selected: selectedNodes.includes(node.id),
+      }))
+    )
+  }, [selectedNodes, setLocalNodes])
+
   // Sync when auto-layout is triggered (layoutVersion changes)
   useEffect(() => {
     if (layoutVersion > 0) {
@@ -45,6 +55,15 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges, layoutVersion }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layoutVersion])
+
+  // Sync when undo/redo is triggered (undoRedoVersion changes)
+  useEffect(() => {
+    if (undoRedoVersion > 0) {
+      setLocalNodes(nodes)
+      setLocalEdges(edges)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [undoRedoVersion])
 
   useEffect(() => {
     if (edges.length !== localEdges.length) {
@@ -99,8 +118,22 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges, layoutVersion }) {
   )
 
   const handleNodeClick = useCallback((event, node) => {
-    setEditModal({ open: true, type: 'node', item: node })
-  }, [])
+    // Multi-select with Shift key
+    if (event.shiftKey) {
+      setSelectedNodes((prev) => {
+        if (prev.includes(node.id)) {
+          // Deselect if already selected
+          return prev.filter((id) => id !== node.id)
+        } else {
+          // Add to selection
+          return [...prev, node.id]
+        }
+      })
+    } else {
+      // Regular click - open edit modal (only if not multi-selecting)
+      setEditModal({ open: true, type: 'node', item: node })
+    }
+  }, [setSelectedNodes])
 
   const handleEdgeClick = useCallback((event, edge) => {
     setEditModal({ open: true, type: 'edge', item: edge })
@@ -193,6 +226,37 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges, layoutVersion }) {
     setNodes(propagatedNodes)
   }, [localNodes, localEdges, setLocalNodes, setNodes])
 
+  // Handle clicking on empty canvas - deselect all
+  const handlePaneClick = useCallback(() => {
+    setSelectedNodes([])
+  }, [setSelectedNodes])
+
+  // Keyboard shortcuts for selection operations
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Delete key to delete selected nodes
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedNodes.length > 0) {
+        e.preventDefault()
+        const updatedNodes = localNodes.filter(n => !selectedNodes.includes(n.id))
+        const updatedEdges = localEdges.filter(e =>
+          !selectedNodes.includes(e.source) && !selectedNodes.includes(e.target)
+        )
+        setLocalNodes(updatedNodes)
+        setNodes(updatedNodes)
+        setLocalEdges(updatedEdges)
+        setEdges(updatedEdges)
+        setSelectedNodes([])
+      }
+      // Escape to deselect
+      if (e.key === 'Escape') {
+        setSelectedNodes([])
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedNodes, localNodes, localEdges, setLocalNodes, setNodes, setLocalEdges, setEdges, setSelectedNodes])
+
   return (
     <div className="graph-canvas">
       <ReactFlow
@@ -203,6 +267,7 @@ function GraphCanvas({ nodes, edges, setNodes, setEdges, layoutVersion }) {
         onConnect={onConnect}
         onNodeClick={handleNodeClick}
         onEdgeClick={handleEdgeClick}
+        onPaneClick={handlePaneClick}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         fitView
