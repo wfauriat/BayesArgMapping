@@ -198,35 +198,42 @@ This is a **Bayesian Network Argument Mapping application** built with React and
 ```
 argument-mapping-app/
 ├── src/
-│   ├── components/               # 14 React components
-│   │   ├── BayesianNode.jsx/css
-│   │   ├── ConditionalEdge.jsx/css
-│   │   ├── ControlPanel.jsx/css
-│   │   ├── GraphCanvas.jsx/css
-│   │   ├── EditModal.jsx/css
-│   │   ├── CPTModal.jsx/css
-│   │   ├── InterventionModal.jsx/css
-│   │   ├── ImportExportModal.jsx/css
-│   │   ├── ProbabilityQueryModal.jsx/css  ⭐ NEW
-│   │   └── StatisticsPanel.jsx/css
-│   ├── utils/
-│   │   ├── bayesianInference.js       # Bayesian calculations
-│   │   ├── probabilityQueries.js      # Query engine ⭐ NEW
-│   │   ├── nodeTemplates.js           # Template configs
-│   │   ├── layoutAlgorithms.js        # Auto-layout
-│   │   └── exportImport.js            # Save/load
+│   ├── components/                   # 10 React components (20 files with CSS)
+│   │   ├── BayesianNode.jsx/css      # Custom node component
+│   │   ├── ConditionalEdge.jsx/css   # Custom edge with labels
+│   │   ├── ControlPanel.jsx/css      # Left sidebar controls
+│   │   ├── GraphCanvas.jsx/css       # React Flow canvas
+│   │   ├── EditModal.jsx/css         # Node/edge editing
+│   │   ├── CPTModal.jsx/css          # Conditional Probability Tables
+│   │   ├── InterventionModal.jsx/css # do-operator interventions
+│   │   ├── ImportExportModal.jsx/css # Save/load/export
+│   │   ├── ProbabilityQueryModal.jsx/css  # Query & MPE interface
+│   │   └── StatisticsPanel.jsx/css   # Network statistics
+│   ├── utils/                        # 5 utility modules
+│   │   ├── bayesianInference.js      # Bayesian calculations
+│   │   ├── probabilityQueries.js     # Query engine (P(Q|E), MPE)
+│   │   ├── nodeTemplates.js          # Template configs (6 types)
+│   │   ├── layoutAlgorithms.js       # Auto-layout (top-to-bottom)
+│   │   └── exportImport.js           # JSON/localStorage save/load
 │   ├── hooks/
-│   │   └── useHistory.js              # Undo/redo
-│   ├── App.jsx/css
-│   └── main.jsx
-├── test_cases/                        ⭐ NEW
-│   ├── burglary_alarm_network.json
-│   ├── weather_network.json
-│   └── PROBABILITY_QUERY_TEST_SCENARIOS.md
+│   │   └── useHistory.js             # Undo/redo with 50-state buffer
+│   ├── App.jsx/css                   # Root component + theme management
+│   ├── main.jsx                      # Entry point
+│   └── index.css                     # Global styles
+├── tests/                            # Test suite & validation
+│   ├── test_standalone.js            # Automated test runner (11 scenarios)
+│   ├── TEST_README.md                # Test documentation
+│   ├── TEST_RESULTS_SUMMARY.md       # Executive summary
+│   ├── manual_calc_corrected.md      # Mathematical proofs
+│   ├── PROBABILITY_QUERY_TEST_SCENARIOS.md  # Test scenarios
+│   ├── burglary_alarm_network.json   # Pearl's burglary alarm example
+│   └── weather_network.json          # Explaining away demo
 ├── dev_notes/
-│   └── development_log.md
-├── package.json
-└── SESSION_STATE.md                   # This file
+│   └── development_log.md            # Detailed session history
+├── package.json                      # Dependencies (React, React Flow, Vite)
+├── vite.config.js                    # Vite configuration
+├── README.md                         # Project description
+└── SESSION_STATE.md                  # This file - session context
 ```
 
 ### Key Algorithms Implemented
