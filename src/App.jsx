@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { ReactFlowProvider } from 'reactflow'
 import ControlPanel from './components/ControlPanel'
 import GraphCanvas from './components/GraphCanvas'
 import ImportExportModal from './components/ImportExportModal'
@@ -16,6 +17,8 @@ function App() {
   const [layoutVersion, setLayoutVersion] = useState(0)
   const [undoRedoVersion, setUndoRedoVersion] = useState(0)
   const [selectedNodes, setSelectedNodes] = useState([])
+  const [theme, setTheme] = useState('dark')
+  const fitViewRef = useRef(null)
 
   // Initialize history hook
   const { addToHistory, undo, redo, canUndo, canRedo } = useHistory(nodes, edges)
@@ -165,8 +168,25 @@ function App() {
     setUndoRedoVersion(v => v + 1)
   }, [selectedNodes])
 
+  // Handle fitView callback from GraphCanvas
+  const handleFitViewReady = useCallback((fitViewFn) => {
+    fitViewRef.current = fitViewFn
+  }, [])
+
+  // Zoom to fit handler
+  const handleZoomToFit = useCallback(() => {
+    if (fitViewRef.current) {
+      fitViewRef.current({ padding: 0.2, duration: 300 })
+    }
+  }, [])
+
+  // Theme toggle handler
+  const handleToggleTheme = useCallback(() => {
+    setTheme(prevTheme => prevTheme === 'dark' ? 'light' : 'dark')
+  }, [])
+
   return (
-    <div className="app-container">
+    <div className={`app-container theme-${theme}`}>
       <ControlPanel
         nodes={nodes}
         edges={edges}
@@ -182,17 +202,23 @@ function App() {
         onBulkDelete={handleBulkDelete}
         onBulkUpdateProbability={handleBulkUpdateProbability}
         onBulkUpdateTemplate={handleBulkUpdateTemplate}
+        onZoomToFit={handleZoomToFit}
+        onToggleTheme={handleToggleTheme}
+        theme={theme}
       />
-      <GraphCanvas
-        nodes={nodes}
-        edges={edges}
-        setNodes={setNodes}
-        setEdges={setEdges}
-        layoutVersion={layoutVersion}
-        undoRedoVersion={undoRedoVersion}
-        selectedNodes={selectedNodes}
-        setSelectedNodes={setSelectedNodes}
-      />
+      <ReactFlowProvider>
+        <GraphCanvas
+          nodes={nodes}
+          edges={edges}
+          setNodes={setNodes}
+          setEdges={setEdges}
+          layoutVersion={layoutVersion}
+          undoRedoVersion={undoRedoVersion}
+          selectedNodes={selectedNodes}
+          setSelectedNodes={setSelectedNodes}
+          onFitViewReady={handleFitViewReady}
+        />
+      </ReactFlowProvider>
 
       {showImportExport && (
         <ImportExportModal

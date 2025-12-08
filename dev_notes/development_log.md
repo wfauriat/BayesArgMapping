@@ -2183,3 +2183,98 @@ Also updated:
 
 ---
 
+
+---
+
+## Session: 2025-12-08 - UI/UX Enhancements
+
+### Prompt - Zoom to Fit and Theme Toggle
+**User Request:**
+> can you now implement "zoom to fit" and "dark / light theme"
+
+**Context:**
+After validating the Bayesian inference engine with automated tests (100% pass rate), user requested two new UI features to improve usability.
+
+**Implementation:**
+
+**1. Zoom to Fit Feature:**
+- Added `useReactFlow` hook to GraphCanvas component
+- Created `handleZoomToFit` function in App.jsx
+- Passed fitView function via ref from GraphCanvas to App
+- Added "🔍 Zoom to Fit" button in ControlPanel Graph Operations section
+- Wrapped GraphCanvas in `ReactFlowProvider` to enable React Flow hooks
+- Configuration: 20% padding, 300ms smooth animation
+
+**Initial Issue:** Error `[React Flow]: Seems like you have not used zustand provider as an ancestor`
+- **Fix:** Wrapped GraphCanvas component with `<ReactFlowProvider>` in App.jsx
+
+**2. Dark/Light Theme Toggle:**
+- Added theme state in App.jsx (default: 'dark')
+- Created `handleToggleTheme` function
+- Added dynamic className: `app-container theme-${theme}`
+- Added theme toggle button showing:
+  - "☀️ Light Mode" when dark
+  - "🌙 Dark Mode" when light
+- Implemented comprehensive light theme CSS across all components
+
+**CSS Files Modified (12 files):**
+1. `App.css` - Base theme switching, ReactFlow controls styling
+2. `ControlPanel.css` - Panel, inputs, buttons
+3. `GraphCanvas.css` - Canvas background, edges
+4. `ConditionalEdge.css` - Edge labels with card design
+5. `StatisticsPanel.css` - Panel and stat items
+6. `EditModal.css` - Modal styling
+7. `ImportExportModal.css` - Modal styling
+8. `CPTModal.css` - Modal styling
+9. `InterventionModal.css` - Modal styling
+10. `ProbabilityQueryModal.css` - Modal styling
+
+**Design Iterations:**
+
+**Iteration 1 - Initial Light Theme:**
+- Canvas background: Dark (issue detected)
+- Buttons: Too bright blue (#4355f8)
+- Statistics panel: Still dark
+
+**Iteration 2 - Fix Canvas & Statistics:**
+- Fixed canvas to white background
+- Updated statistics panel to light gray
+- Adjusted button color to #5b6fd8
+
+**Iteration 3 - Edge Styling:**
+- Changed edge labels from pure white to off-white (#f5f5f5)
+- Updated edge colors for light mode visibility
+
+**Iteration 4 - Professional Redesign:**
+- Buttons: Changed to Tailwind blue-600 (#2563eb)
+- Edge labels: Card-style with shadows and white background
+- Border: 1px with subtle drop shadows
+
+**Iteration 5 - User Refinement:**
+- Buttons: Softened to #3b82f6 (blue-500) - less bright
+- Edge borders: Increased from 1px to 2px for better visibility
+- Final professional look achieved
+
+**Final Color Palette:**
+- Primary blue: `#3b82f6` (buttons)
+- Hover blue: `#2563eb`
+- Text gray: `#374151`
+- Border gray: `#d1d5db`
+- Background white: `#ffffff`
+- Off-white: `#f5f5f5`
+
+**Files Changed:**
+- `src/App.jsx` - Theme state, fitView management, ReactFlowProvider wrapper
+- `src/components/GraphCanvas.jsx` - useReactFlow hook, fitView callback
+- `src/components/ControlPanel.jsx` - Two new buttons, theme prop
+- All component CSS files - Comprehensive light theme styles
+
+**Result:**
+✅ Zoom to Fit works perfectly with smooth animation
+✅ Theme toggle works with polished light mode
+✅ Professional, modern design with good contrast
+✅ All components properly themed
+✅ Smooth transitions between themes
+
+---
+

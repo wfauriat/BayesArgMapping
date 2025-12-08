@@ -269,3 +269,47 @@
   font-weight: 600;
   font-size: 14px;
 }
+
+/* Light theme */
+.theme-light .modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.theme-light .modal-content {
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #ddd;
+}
+
+.theme-light .modal-content h2 {
+  color: #000000;
+}
+
+.theme-light .modal-content label {
+  color: #444;
+}
+
+.theme-light .modal-content input,
+.theme-light .modal-content select {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  color: #000000;
+}
+
+.theme-light .modal-content button {
+  background-color: #4355f8;
+  color: white;
+}
+
+.theme-light .modal-content button:hover {
+  background-color: #3344d8;
+}
+
+.theme-light .modal-content button:last-child {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.theme-light .modal-content button:last-child:hover {
+  background-color: #d1d5db;
+}

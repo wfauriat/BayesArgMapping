@@ -17,7 +17,10 @@ function ControlPanel({
   selectedNodes,
   onBulkDelete,
   onBulkUpdateProbability,
-  onBulkUpdateTemplate
+  onBulkUpdateTemplate,
+  onZoomToFit,
+  onToggleTheme,
+  theme
 }) {
   const [nodeLabel, setNodeLabel] = useState('')
   const [nodeProbability, setNodeProbability] = useState(0.5)
@@ -140,6 +143,12 @@ function ControlPanel({
         </button>
         <button className="action-button-compact" onClick={onAutoLayout}>
           🔄 Auto-Layout
+        </button>
+        <button className="action-button-compact" onClick={onZoomToFit}>
+          🔍 Zoom to Fit
+        </button>
+        <button className="action-button-compact" onClick={onToggleTheme}>
+          {theme === 'dark' ? '☀️' : '🌙'} {theme === 'dark' ? 'Light' : 'Dark'} Mode
         </button>
       </div>
 

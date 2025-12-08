@@ -2,8 +2,8 @@
 
 **Last Updated:** 2025-12-08
 **Current Branch:** main
-**Latest Commit:** 1d25a5a
-**Dev Server:** Should be running on `http://localhost:5173/`
+**Latest Commit:** 1f97d06 (will be updated after commit)
+**Dev Server:** Running on `http://localhost:5173/`
 
 ---
 
@@ -19,9 +19,48 @@ This is a **Bayesian Network Argument Mapping application** built with React and
 
 ---
 
-## Recent Session Work (2025-12-08)
+## Recent Session Work (2025-12-08 - Session 2)
 
-### Test Validation & Verification ⭐ NEW
+### UI/UX Enhancements ⭐ NEW
+
+**1. Zoom to Fit Feature** ✅
+- ✅ Added "🔍 Zoom to Fit" button in Graph Operations
+- ✅ Uses React Flow's `fitView()` with smooth animation (300ms)
+- ✅ 20% padding for comfortable viewing
+- ✅ Wrapped GraphCanvas in `ReactFlowProvider` for proper hook usage
+
+**2. Dark/Light Theme Toggle** ✅
+- ✅ Added theme toggle button: "☀️ Light Mode" / "🌙 Dark Mode"
+- ✅ Comprehensive light theme implementation across all components
+- ✅ Smooth 0.3s transitions between themes
+- ✅ Default theme: Dark (preserves original design)
+
+**Light Theme Styling:**
+- Control Panel: White background with light gray sections
+- Canvas: Pure white background with subtle gray patterns
+- Buttons: Professional blue (#3b82f6) with good contrast
+- Edge Labels: White cards with 2px borders and subtle shadows
+- Statistics Panel: Light gray with white stat cards
+- All Modals: Light backgrounds with proper contrast
+- Node colors preserved from templates
+
+**Technical Details:**
+- Theme state managed in App.jsx
+- CSS class switching: `.theme-dark` / `.theme-light`
+- All 12 CSS files updated with light theme styles
+- Color palette: Tailwind-inspired blues for consistency
+
+**Files Modified:**
+- `src/App.jsx` - Theme state and fitView management
+- `src/components/GraphCanvas.jsx` - ReactFlowProvider, fitView hook
+- `src/components/ControlPanel.jsx` - New buttons and theme prop
+- All component CSS files - Comprehensive light theme styles
+
+---
+
+## Session 1 Work (2025-12-08 - Earlier)
+
+### Test Validation & Verification ⭐
 
 **1. Automated Test Suite** ✅ 100% PASS RATE
 - ✅ Created comprehensive test suite with 11 scenarios

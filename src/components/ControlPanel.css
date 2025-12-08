@@ -173,3 +173,84 @@
   background-color: #5a2020 !important;
   border-color: #ff8888 !important;
 }
+/* Light theme styles */
+.theme-light .control-panel {
+  background-color: #ffffff;
+  border-right: 1px solid #ddd;
+}
+
+.theme-light .control-panel h2 {
+  color: #000000;
+}
+
+.theme-light .control-section {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+.theme-light .control-section h3 {
+  color: #4355f8;
+}
+
+.theme-light .input-group label {
+  color: #666;
+}
+
+.theme-light .input-group input,
+.theme-light .input-group select {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  color: #000000;
+}
+
+.theme-light .input-group input:focus,
+.theme-light .input-group select:focus {
+  border-color: #4355f8;
+  outline: none;
+}
+
+.theme-light .add-button,
+.theme-light .action-button-compact {
+  background-color: #3b82f6;
+  color: white;
+  border: 1px solid #3b82f6;
+}
+
+.theme-light .add-button:hover:not(:disabled),
+.theme-light .action-button-compact:hover:not(:disabled) {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.theme-light .action-button-compact:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  color: #888;
+}
+
+.theme-light .instructions li {
+  color: #444;
+}
+
+.theme-light .info-text {
+  color: #555;
+}
+
+.theme-light .bulk-operations {
+  border: 2px solid #4355f8;
+}
+
+.theme-light .bulk-operations h3 {
+  color: #3344d8;
+}
+
+.theme-light .delete-button {
+  background-color: #fef2f2 !important;
+  border-color: #ef4444 !important;
+  color: #dc2626 !important;
+}
+
+.theme-light .delete-button:hover:not(:disabled) {
+  background-color: #fee2e2 !important;
+  border-color: #dc2626 !important;
+}

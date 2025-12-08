@@ -6,6 +6,7 @@ import ReactFlow, {
   addEdge,
   useNodesState,
   useEdgesState,
+  useReactFlow,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import BayesianNode from './BayesianNode'
@@ -24,12 +25,20 @@ const edgeTypes = {
   conditional: ConditionalEdge,
 }
 
-function GraphCanvas({ nodes, edges, setNodes, setEdges, layoutVersion, undoRedoVersion, selectedNodes, setSelectedNodes }) {
+function GraphCanvas({ nodes, edges, setNodes, setEdges, layoutVersion, undoRedoVersion, selectedNodes, setSelectedNodes, onFitViewReady }) {
   const [localNodes, setLocalNodes, onNodesChange] = useNodesState([])
   const [localEdges, setLocalEdges, onEdgesChange] = useEdgesState([])
   const [editModal, setEditModal] = useState({ open: false, type: null, item: null })
   const [cptModal, setCptModal] = useState({ open: false, node: null })
   const [interventionModal, setInterventionModal] = useState({ open: false, node: null })
+  const { fitView } = useReactFlow()
+
+  // Pass fitView function to parent component
+  useEffect(() => {
+    if (onFitViewReady) {
+      onFitViewReady(fitView)
+    }
+  }, [fitView, onFitViewReady])
 
   // Sync external nodes to local state only when nodes are added/removed
   useEffect(() => {

@@ -8,6 +8,15 @@
   background-color: #0a0a0a;
 }
 
+/* Light theme */
+.theme-light .graph-canvas {
+  background-color: #ffffff;
+}
+
+.theme-light .react-flow {
+  background-color: #ffffff;
+}
+
 .react-flow__node {
   border-radius: 8px;
 }
@@ -20,6 +29,14 @@
 .react-flow__edge.selected .react-flow__edge-path {
   stroke: #535bf2;
   stroke-width: 3;
+}
+
+.theme-light .react-flow__edge-path {
+  stroke: #4355f8;
+}
+
+.theme-light .react-flow__edge.selected .react-flow__edge-path {
+  stroke: #3344d8;
 }
 
 .react-flow__controls {
