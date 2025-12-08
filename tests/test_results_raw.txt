@@ -1,0 +1,74 @@
+
+========================================
+BAYESIAN INFERENCE ENGINE TEST SUITE
+========================================
+
+TEST CASE 1: BURGLARY ALARM NETWORK
+====================================
+
+Scenario 1.1: P(Burglary | John Calls = True)
+  FAILED: 54.59% (expected 0.5-1.5%)
+
+Scenario 1.2: P(Burglary | John Calls = True, Mary Calls = True)
+  FAILED: 58.31% (expected 1-3%)
+  ✓ Correctly higher than Scenario 1.1 (54.59%)
+
+Scenario 1.3: P(Burglary | John Calls = True, Earthquake = True)
+  PASSED: 0.33% (expected 0.1-0.5%)
+  ✓ EXPLAINING AWAY WORKS: Lower than Scenario 1.1 (54.59%)
+
+Scenario 1.4: P(Burglary | Alarm = True)
+  FAILED: 58.31% (expected 3-5%)
+
+
+TEST CASE 2: WEATHER PREDICTION NETWORK
+========================================
+
+Scenario 2.1: P(Rain | Wet Ground = True)
+  PASSED: 69.52% (expected 50-70%)
+
+Scenario 2.2: P(Rain | Wet Ground = True, Sprinkler On = True)
+  WARNING: 19.22% (expected 20-40%) - Slightly outside range
+  ✓ CLASSIC EXPLAINING AWAY: Lower than Scenario 2.1 (69.52%)
+
+Scenario 2.3: P(Rain | Wet Ground = True, People w/ Umbrellas = True)
+  WARNING: 99.99% (expected 80-95%) - Slightly outside range
+  ✓ CORROBORATION WORKS: Higher than Scenario 2.1 (69.52%)
+
+Scenario 2.4: P(Rain | Wet Ground=T, Sprinkler=T, Umbrellas=T)
+  FAILED: 99.95% (expected 60-80%)
+  ✓ CORRECT INTERACTION: Between 2.2 (19.22%) and 2.3 (99.99%)
+
+Scenario 2.5: P(Low Pressure | Rain = True)
+  FAILED: 70.30% (expected 35-45%)
+  ✓ BACKWARD REASONING: Higher than prior (30%)
+
+Scenario 2.6A: P(Sprinkler On | Wet Ground = True)
+  PASSED: 37.70% (expected 10-50%)
+Scenario 2.6B: P(Rain | Wet Ground = True)
+  PASSED: 69.52% (expected 50-70%)
+  ✓ PRIOR INFLUENCE: Rain (69.52%) > Sprinkler (37.70%)
+
+
+========================================
+TEST SUMMARY
+========================================
+
+Total Tests: 11
+✓ Passed: 4
+✗ Failed: 5
+⚠ Warnings: 2
+
+Pass Rate: 36.4%
+
+⚠ SOME TESTS FAILED - See details above.
+
+Failed tests:
+  - Scenario 1.1: 54.59% (expected 0.5-1.5%)
+  - Scenario 1.2: 58.31% (expected 1-3%)
+  - Scenario 1.4: 58.31% (expected 3-5%)
+  - Scenario 2.4: 99.95% (expected 60-80%)
+  - Scenario 2.5: 70.30% (expected 35-45%)
+
+========================================
+

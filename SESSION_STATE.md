@@ -1,98 +1,123 @@
-# Session State - Bayesian Argument Mapping App
+# Session State - Argument Mapping App
 
-**Last Updated:** December 5, 2025 - 5:55 PM
-**Session Duration:** ~6 hours
-**Git Branch:** master
-**Dev Server:** Running at `http://localhost:5173/`
-
----
-
-## Quick Start for New Sessions
-
-1. **Read this file** for current context (you're doing it now!)
-2. **Check git status** to see if there are uncommitted changes
-3. **Review recent commits** (see Git History section below)
-4. **Check Suggested Next Features** section for ideas
+**Last Updated:** 2025-12-06
+**Current Branch:** main
+**Latest Commit:** bb54602
+**Dev Server:** Should be running on `http://localhost:5173/`
 
 ---
 
-## Project Overview
+## Quick Context for New Sessions
 
-**What is this?**
-An interactive web-based argument mapping tool built with React and React Flow. It uses Bayesian networks for probabilistic reasoning and implements Pearl's causal inference framework (do-operator).
+This is a **Bayesian Network Argument Mapping application** built with React and React Flow, implementing J. Pearl's causal inference framework. The app allows users to create, edit, and analyze argument graphs with conditional probabilities and causal relationships.
 
-**Core Technologies:**
-- React 18.3.1
-- React Flow 11.11.4 (graph visualization)
-- Vite (build tool)
-- Pure JavaScript (no TypeScript)
-
-**Key Concepts:**
-- Nodes represent propositions/arguments with probabilities
-- Edges represent causal/logical relationships with conditional probabilities
-- Bayesian inference propagates probabilities through the network
-- do-operator allows causal interventions (not just observation)
-- CPT (Conditional Probability Tables) for exact inference
+### Core Technologies
+- **React 18.3** with Vite
+- **React Flow 11.11** for interactive graph visualization
+- **Bayesian inference** engine with exact enumeration
+- **do-operator** for causal interventions (Pearl's framework)
 
 ---
 
-## Current Feature Status
+## Recent Session Work (2025-12-06)
 
-### ✅ Fully Implemented Features
+### Major Features Completed
 
-1. **Core Graph Editing**
-   - Add/delete nodes and edges
-   - Drag nodes to reposition
-   - Click nodes/edges to edit properties
-   - Interactive canvas with zoom/pan/minimap
+**1. Probability Query/Calculator** ⭐ NEW
+- ✅ Conditional probability queries: P(query | evidence)
+  - Exact inference via enumeration algorithm
+  - True/False/Unknown evidence interface
+  - Detailed reasoning chain visualization
 
-2. **Bayesian Inference**
-   - Automatic probability propagation (noisy-OR model)
-   - Conditional Probability Tables (CPT) for complex relationships
-   - Topological ordering for correct inference
-   - Real-time updates when network changes
+- ✅ Most Probable Explanation (MPE)
+  - Finds most likely complete state assignment
+  - Exact for ≤8 unobserved variables
+  - Greedy approximation for larger networks
 
-3. **Causal Interventions (do-operator)**
-   - Set nodes to fixed values
-   - Breaks incoming causal links
-   - Propagates only to descendants
-   - Visual indicators (orange styling, "do()" badge)
+- ✅ Query Interface (ProbabilityQueryModal)
+  - Mode selector: Conditional Query / MPE
+  - Evidence buttons for each node
+  - Color-coded reasoning steps
+  - Clear all evidence functionality
 
-4. **Node Templates** ⭐ RECENT (Prompt #14, 5:15 PM)
-   - 6 semantic templates: Default, Evidence, Hypothesis, Conclusion, Assumption, Counter-Argument
-   - Each has unique color, icon (emoji), and default probability
-   - Template selector in ControlPanel (new nodes) and EditModal (existing nodes)
-   - Auto-updates probability when template changed
+**2. Child Node Probability Auto-Computation** ⭐ NEW
+- ✅ Disabled probability editing for child nodes
+- ✅ Shows "Marginal Probability (computed):" label
+- ✅ Displays informative message about auto-computation
+- ✅ Import handler recomputes child probabilities
+- ✅ Auto-layout refreshes probabilities
 
-5. **Edge Labels/Types** ⭐ RECENT (Prompt #14, 5:15 PM)
-   - 5 edge types: Supports, Contradicts, Requires, Influences, Correlates
-   - Color-coded with different stroke patterns (solid/dashed/dotted)
-   - Optional text labels on edges
-   - Edge type selector in EditModal
+**3. Bug Fixes**
+- ✅ Fixed Noisy-OR calculation (leak probability placement)
+- ✅ Fixed test case JSON format
+- ✅ Fixed evidence interface (True/False buttons instead of numeric input)
 
-6. **Save/Load/Export**
-   - Save to browser localStorage
-   - Export to JSON file
-   - Import from JSON
-   - Copy/paste JSON to clipboard
-   - Export to PNG (optional, requires html2canvas)
+**4. Test Infrastructure**
+- ✅ Created burglary_alarm_network.json (Pearl's classic example)
+- ✅ Created weather_network.json (explaining away demonstration)
+- ✅ Created PROBABILITY_QUERY_TEST_SCENARIOS.md (comprehensive test guide with 15 scenarios)
 
-7. **Auto-Layout**
-   - Simple Layered algorithm (top-to-bottom)
-   - Groups nodes by dependency level
-   - Modular architecture ready for additional algorithms (Dagre, D3-Force, ELK)
+### Previous Session (2025-12-05)
 
-8. **Network Statistics**
-   - Real-time statistics panel
-   - 8 metrics: node count, edge count, avg probability, roots, leaves, avg degree, max depth, density
+**Undo/Redo & Multi-Select:**
+- ✅ Undo/Redo with 50-state history buffer
+- ✅ Keyboard shortcuts (Ctrl+Z, Ctrl+Y)
+- ✅ Multi-select with Shift+click
+- ✅ Bulk operations (apply template, set probability, delete)
+- ✅ Visual selection feedback (green glow)
 
-### 🚧 Known Issues / Limitations
+**Node Templates & Edge Labels:**
+- ✅ 6 node templates with colors/icons
+- ✅ 5 edge types with visual styling
+- ✅ Template configuration system
 
-- No undo/redo functionality yet
-- Auto-layout only has one algorithm (Simple Layered)
-- No multi-select or bulk operations
-- No graph validation (doesn't detect cycles)
-- No animation/transitions
+---
+
+## Complete Feature List
+
+### Graph Building
+- ✅ Add/edit/delete nodes and edges
+- ✅ Drag-and-drop node positioning
+- ✅ 6 node templates (Evidence, Hypothesis, Conclusion, etc.)
+- ✅ 5 edge types (Supports, Contradicts, Requires, etc.)
+- ✅ Auto-layout (top-to-bottom layered)
+- ✅ Multi-select with Shift+click
+- ✅ Bulk operations (template, probability, delete)
+- ✅ Undo/Redo (Ctrl+Z, Ctrl+Y, 50-state buffer)
+
+### Bayesian Inference
+- ✅ Noisy-OR model for probability propagation
+- ✅ Conditional Probability Tables (CPT)
+- ✅ Auto-computation of child node probabilities
+- ✅ Topological ordering for correct propagation
+- ✅ Exact inference via enumeration
+
+### Causal Analysis
+- ✅ do-operator interventions (Pearl's framework)
+- ✅ Visual intervention indicators (orange theme)
+- ✅ Causal effect propagation to descendants only
+
+### Query & Analysis ⭐ NEW
+- ✅ Conditional probability queries: P(Q | E)
+- ✅ Most Probable Explanation (MPE)
+- ✅ Exact inference via enumeration
+- ✅ Reasoning chain visualization
+- ✅ True/False/Unknown evidence interface
+- ✅ Query modal with two modes
+
+### Import/Export
+- ✅ JSON file export/import
+- ✅ Browser localStorage save/load
+- ✅ PNG image export (optional)
+- ✅ Clipboard copy/paste
+- ✅ Multiple save slots
+
+### Statistics & UI
+- ✅ Real-time network statistics (8 metrics)
+- ✅ Interactive minimap
+- ✅ Zoom/pan controls
+- ✅ Visual selection feedback
+- ✅ Dark theme UI
 
 ---
 
@@ -102,358 +127,307 @@ An interactive web-based argument mapping tool built with React and React Flow. 
 ```
 argument-mapping-app/
 ├── src/
-│   ├── components/
-│   │   ├── BayesianNode.jsx/css          # Custom node with template styling
-│   │   ├── ConditionalEdge.jsx/css       # Custom edge with type styling
-│   │   ├── ControlPanel.jsx/css          # Left sidebar controls
-│   │   ├── GraphCanvas.jsx/css           # Main React Flow canvas
-│   │   ├── EditModal.jsx/css             # Edit node/edge properties
-│   │   ├── CPTModal.jsx/css              # Conditional Probability Table editor
-│   │   ├── InterventionModal.jsx/css     # do-operator interface
-│   │   ├── ImportExportModal.jsx/css     # Save/load/export interface
-│   │   └── StatisticsPanel.jsx/css       # Network statistics
+│   ├── components/               # 14 React components
+│   │   ├── BayesianNode.jsx/css
+│   │   ├── ConditionalEdge.jsx/css
+│   │   ├── ControlPanel.jsx/css
+│   │   ├── GraphCanvas.jsx/css
+│   │   ├── EditModal.jsx/css
+│   │   ├── CPTModal.jsx/css
+│   │   ├── InterventionModal.jsx/css
+│   │   ├── ImportExportModal.jsx/css
+│   │   ├── ProbabilityQueryModal.jsx/css  ⭐ NEW
+│   │   └── StatisticsPanel.jsx/css
 │   ├── utils/
-│   │   ├── bayesianInference.js          # Core probability calculations
-│   │   ├── exportImport.js               # Import/export utilities
-│   │   ├── layoutAlgorithms.js           # Auto-layout algorithms
-│   │   └── nodeTemplates.js              # Template configurations ⭐ NEW
-│   ├── App.jsx/css                       # Main container
-│   ├── index.css                         # Global styles
-│   └── main.jsx                          # Entry point
+│   │   ├── bayesianInference.js       # Bayesian calculations
+│   │   ├── probabilityQueries.js      # Query engine ⭐ NEW
+│   │   ├── nodeTemplates.js           # Template configs
+│   │   ├── layoutAlgorithms.js        # Auto-layout
+│   │   └── exportImport.js            # Save/load
+│   ├── hooks/
+│   │   └── useHistory.js              # Undo/redo
+│   ├── App.jsx/css
+│   └── main.jsx
+├── test_cases/                        ⭐ NEW
+│   ├── burglary_alarm_network.json
+│   ├── weather_network.json
+│   └── PROBABILITY_QUERY_TEST_SCENARIOS.md
+├── dev_notes/
+│   └── development_log.md
 ├── package.json
-├── vite.config.js
-└── .gitignore
+└── SESSION_STATE.md                   # This file
 ```
 
-### Key Files to Know
+### Key Algorithms Implemented
 
-**`src/utils/nodeTemplates.js`** ⭐ NEW
-- Defines all node templates and edge types
-- Configuration-based, easy to extend
-- Exports getter functions for UI components
+**1. Exact Inference via Enumeration**
+```
+P(Q | E) = P(Q, E) / [P(Q, E) + P(¬Q, E)]
 
-**`src/utils/bayesianInference.js`**
-- Core inference engine
-- Functions: `propagateProbabilities()`, `applyIntervention()`, `calculateNodeProbability()`
-- Implements noisy-OR model and exact CPT inference
+Where P(Q, E) = Σ P(Q, E, h₁, h₂, ..., hₙ)
+                over all hidden variable assignments
+```
 
-**`src/components/GraphCanvas.jsx`**
-- Main React Flow integration
-- Manages node/edge state with React Flow hooks
-- Handles all modals (Edit, CPT, Intervention)
-- Syncs with parent state carefully to avoid infinite loops
+**2. Noisy-OR Model (Corrected)**
+```
+P(effect=T | causes) = 1 - P(all causes inhibited)
+                     = 1 - [(1 - leak) × ∏(1 - pᵢ) for true causes]
 
-**`src/App.jsx`**
-- Top-level state management (nodes, edges)
-- `addNode()` function - make sure to pass all template properties!
-- Modal visibility state
+Fixed: leak probability now properly placed at start, not applied unconditionally
+```
 
-### Data Structures
+**3. Most Probable Explanation**
+```
+argmax P(H₁, ..., Hₙ | E) = argmax P(H₁, ..., Hₙ, E)
 
-**Node:**
+- Exact: Enumerate all 2^n assignments
+- Greedy: Topological order, assign most likely at each step
+```
+
+**4. Joint Probability**
+```
+P(X₁, ..., Xₙ) = ∏ P(Xᵢ | Parents(Xᵢ))
+
+Chain rule of Bayesian networks
+```
+
+---
+
+## Important Code Patterns
+
+### State Management
 ```javascript
-{
-  id: "node-123",
-  type: "bayesianNode",
-  position: { x: 100, y: 200 },
-  data: {
-    label: "Evidence A",
-    probability: 0.8,
-    template: "evidence",        // ⭐ NEW
-    color: "#4ade80",            // ⭐ NEW
-    backgroundColor: "#1a2e1a",  // ⭐ NEW
-    icon: "📊",                  // ⭐ NEW
-    useCPT: false,
-    cpt: null,
-    intervention: null  // or { active: true, value: 0.9 }
-  }
+// App.jsx - global state
+const [nodes, setNodes] = useState([])
+const [edges, setEdges] = useState([])
+
+// GraphCanvas - local React Flow state
+const [localNodes, setLocalNodes, onNodesChange] = useNodesState([])
+
+// Sync mechanisms:
+// 1. Length-based (nodes added/removed)
+// 2. layoutVersion (auto-layout triggered)
+// 3. undoRedoVersion (undo/redo operations)
+```
+
+### Child Node Probability
+```javascript
+// Root nodes: editable prior probability
+// Child nodes: computed marginal probability (disabled editing)
+if (hasParents) {
+  const marginalProb = calculateNodeProbability(node, parentNodes, edges)
+  // Show as computed, disable input
 }
 ```
 
-**Edge:**
+### History Management (useRef pattern)
 ```javascript
-{
-  id: "edge-123",
-  source: "node-1",
-  target: "node-2",
-  type: "conditional",
-  animated: true,
-  data: {
-    probability: 0.7,
-    edgeType: "supports",     // ⭐ NEW
-    edgeLabel: "Evidence for" // ⭐ NEW (optional)
-  }
-}
+// useHistory.js - avoid stale closures
+const historyRef = useRef([])
+const currentIndexRef = useRef(-1)
+const skipHistoryRef = useRef(false)  // Skip during undo/redo
 ```
+
+---
+
+## Recent Bug Fixes Reference
+
+**1. Noisy-OR Leak Probability** (2025-12-06)
+- **Before:** `product *= (1 - LEAK)` (unconditional)
+- **After:** `probAllInhibited = (1 - LEAK)` (start value)
+- **Impact:** Probabilities now calculate correctly
+
+**2. Child Node Probability Editing** (2025-12-06)
+- **Issue:** Users could set probabilities that contradicted parent values
+- **Fix:** Disabled editing for child nodes, show computed marginal probability
+- **Semantic:** Root nodes have priors, child nodes have marginals
+
+**3. Evidence Interface** (2025-12-06)
+- **Before:** Numeric probability input (0-1 range)
+- **After:** Three buttons (True/False/Unknown)
+- **UX:** Simpler, more intuitive for setting evidence
+
+**4. Redo Not Working** (2025-12-06, previous session)
+- **Fix:** Rewrote useHistory with useRef
+- **Added:** skipHistoryRef flag
+
+**5. Bulk Operations Not Immediate** (2025-12-06, previous session)
+- **Fix:** Added `setUndoRedoVersion(v => v + 1)` to force sync
 
 ---
 
 ## Git History (Recent Commits)
 
 ```
-87ca2d2  Remove duplicate DEVELOPMENT_LOG.md file (5:55 PM)
-d7d0d63  Add node templates and edge labels/types features (5:50 PM) ⭐
-61b93a7  Change auto-layout to vertical (top-to-bottom) direction (5:05 PM)
-709300b  Add auto-layout feature with Simple Layered algorithm (4:40 PM)
-bd482e5  Add interventions UI with do-operator controls (3:50 PM)
-e51d805  Add save/load, export, CPT, and statistics features (2:15 PM)
-434d59a  Fix node addition bug in GraphCanvas (1:45 PM)
-cc0f348  Add node/edge editing and Bayesian inference (1:15 PM)
-c484c4d  first proposal with React Flow (1:00 PM)
+bb54602  Add Probability Query/Calculator with MPE and child node auto-computation ⭐
+f8b3795  Implement undo/redo and multi-select with bulk operations
+d7d0d63  Add node templates and edge labels/types features
+61b93a7  Change auto-layout to vertical (top-to-bottom) direction
+709300b  Add auto-layout feature with Simple Layered algorithm
+bd482e5  Add interventions UI with do-operator controls
+e51d805  Add save/load, export, CPT, and statistics features
 ```
-
-**Most Recent Feature:** Node templates and edge labels (Prompt #14)
 
 ---
 
-## Development Patterns & Conventions
+## Test Cases & Documentation
 
-### State Management
-- App.jsx holds global state (nodes, edges)
-- GraphCanvas uses React Flow's `useNodesState` and `useEdgesState` for local state
-- Careful synchronization to avoid infinite loops:
-  - Sync only when array lengths change
-  - Use `layoutVersion` counter for explicit auto-layout triggers
+### Test Networks
+1. **burglary_alarm_network.json** - Classic Pearl burglary alarm
+   - Demonstrates explaining away
+   - Tests: P(Burglary | JohnCalls, MaryCalls)
 
-### Adding New Templates
-1. Edit `src/utils/nodeTemplates.js`
-2. Add to `nodeTemplates` object with: name, description, color, backgroundColor, probability, icon
-3. No other changes needed - UI automatically populates
+2. **weather_network.json** - Weather prediction
+   - Rain/Sprinkler explaining away pattern
+   - Tests: P(Rain | WetGround, Sprinkler)
 
-### Adding New Edge Types
-1. Edit `src/utils/nodeTemplates.js`
-2. Add to `edgeTypes` object with: name, color, style (solid/dashed/dotted), animated
-3. No other changes needed - UI automatically populates
+### Test Documentation
+**PROBABILITY_QUERY_TEST_SCENARIOS.md** - Comprehensive guide
+- 15 detailed test scenarios
+- Expected probability ranges
+- Explaining away examples
+- MPE test cases
+- Verification checklist
+- Testing protocol
 
-### Component Communication
-- Parent passes props down (nodes, edges, handlers)
-- Children call handlers to update parent state
-- Modals receive item to edit and call `onSave` with updated item
-- Probability propagation happens automatically after state changes
+---
 
-### Git Commit Messages
-- Use conventional format with emoji where appropriate
-- Include detailed implementation notes
-- List all files changed
-- Add "🤖 Generated with Claude Code" footer
-- Co-Authored-By: Claude
+## Known Limitations
+
+- Exact inference exponential in network size (practical for <15 nodes)
+- MPE uses greedy approximation for >8 unobserved variables
+- No cycle detection (assumes DAG structure)
+- Binary states only (no multi-valued variables)
+- History limited to 50 states
 
 ---
 
 ## Suggested Next Features
 
-These were suggested in Prompt #13 (5:10 PM). User has not selected the next feature yet.
+### High Priority
+1. **Graph Validation** - Detect cycles, warn about issues
+2. **Sensitivity Analysis** - Which changes affect conclusion most
+3. **Share via URL** - Encode graph state in URL
 
-### Top 3 Recommendations:
+### Medium Priority
+4. **Additional Layout Algorithms** - Dagre, D3-Force, ELK
+5. **Animation & Transitions** - Highlight probability updates
+6. **Zoom to Fit** - Button to fit graph in view
 
-**🥇 Undo/Redo Functionality** - HIGHLY RECOMMENDED
-- Critical for user experience
-- Track history stack of graph states
-- Implement Ctrl+Z / Ctrl+Y shortcuts
-- Complexity: Moderate
-- Priority: HIGH
-
-**🥈 Probability Queries/Calculator**
-- "What if" scenario testing
-- Query: P(conclusion | evidence1=true, evidence2=false)
-- Most Probable Explanation (MPE)
-- Show reasoning chain
-- Complexity: Medium-high
-- Priority: MEDIUM-HIGH
-
-**🥉 Multi-Select & Bulk Operations**
-- Select multiple nodes (Shift+click, drag-to-select)
-- Move groups, delete multiple, bulk property changes
-- Complexity: Medium
-- Priority: MEDIUM
-
-### Other Good Options:
-
-4. **Graph Validation & Warnings** (Easy, useful)
-   - Detect cycles (invalid for DAGs)
-   - Warn about disconnected components
-   - Flag probability inconsistencies
-
-5. **Sensitivity Analysis** (Advanced, high value)
-   - Show which changes affect conclusion most
-   - Visualize uncertainty
-
-6. **Zoom to Fit / Focus Features** (Easy, nice UX)
-   - Button to fit graph in view
-   - Double-click to center on node
-
-7. **Share via URL** (Medium, collaboration)
-   - Encode graph state in URL
-   - No backend needed
-
-8. **Custom Node Styling** (Easy-medium, visual)
-   - More shape options
-   - Theme support (light mode, high contrast)
-
-9. **Animation & Transitions** (Easy, polish)
-   - Animate auto-layout
-   - Highlight probability propagation
-
-10. **Additional Layout Algorithms** (Easy-medium, building on existing)
-    - Add Dagre (hierarchical)
-    - Add D3-Force (physics-based)
-    - Add layout selector dropdown
+### Low Priority
+7. **Light Mode / Themes**
+8. **Export to other formats** (DOT, BPMN, CSV)
+9. **Custom node shapes**
 
 ---
 
-## Important Gotchas / Lessons Learned
-
-1. **GraphCanvas State Sync**
-   - Don't sync on every `nodes` prop change - causes infinite loops
-   - Only sync when array length changes OR when explicit signal (`layoutVersion`)
-   - React Flow maintains internal state separate from parent
-
-2. **Template Data Must Be Passed Completely**
-   - When adding nodes in App.jsx, must pass: template, color, backgroundColor, icon
-   - Bug discovered in Prompt #14 where these were missing
-   - Fixed in commit d7d0d63
-
-3. **React Flow Best Practices**
-   - Use `useNodesState` and `useEdgesState` for local state
-   - Use `onNodesChange` and `onEdgesChange` for built-in features (drag, select)
-   - Custom handlers for custom behavior (clicks, deletes)
-
-4. **Probability Propagation**
-   - Always call `propagateProbabilities()` after editing nodes/edges
-   - Uses topological ordering to ensure parents calculated before children
-   - Interventions use `applyIntervention()` instead (only propagates to descendants)
-
-5. **Vite vs Create React App**
-   - Dev server: `npm run dev` (not `npm start`)
-   - Instant HMR, no rebuild needed during development
-   - Build: `npm run build` when ready for production
-
----
-
-## Testing Checklist
-
-When implementing new features, test:
-- [ ] Add nodes with different templates
-- [ ] Edit existing node templates
-- [ ] Create edges with different types
-- [ ] Edit existing edge types and labels
-- [ ] Manual node dragging still works after auto-layout
-- [ ] Probability propagation updates correctly
-- [ ] Save/load preserves all data (templates, edge types, etc.)
-- [ ] Interventions still work
-- [ ] CPT still works
-- [ ] Statistics panel updates
-- [ ] No console errors
-- [ ] HMR updates without refresh
-
----
-
-## Quick Reference - Common Commands
+## Development Commands
 
 ```bash
-# Start dev server
+# Start dev server (Vite)
 npm run dev
 
 # Build for production
 npm run build
 
-# Preview production build
-npm run preview
-
-# Git shortcuts
+# Git commands
 git status
 git log --oneline -10
-git add .
+git add -A
 git commit -m "message"
 
-# Check running background processes
-# Use BashOutput tool to see dev server logs
+# Note: Don't push to remote (user handles manually)
 ```
 
 ---
 
-## Session Context Notes
+## Important Gotchas
 
-**Development Flow:**
-- User provides feature requests
-- I implement features modularly
-- Commit after each major feature or bug fix
-- Update development_log.md with detailed notes
-- Test features via HMR without server restart
+1. **GraphCanvas State Sync**
+   - Only sync when length changes OR explicit signal (layoutVersion, undoRedoVersion)
+   - Don't sync on every prop change → infinite loops
 
-**Communication Style:**
-- Direct and technical
-- Code examples in documentation
-- Detailed commit messages
-- Track all changes in development_log.md
-- Use emojis sparingly, only when user requests
+2. **Template Data Must Be Complete**
+   - When adding nodes: pass template, color, backgroundColor, icon
+   - Check App.jsx addNode() function
 
-**File Organization:**
-- Keep related files together (component + CSS)
-- Utils folder for shared logic
-- Modular, extensible architecture
-- Configuration over hard-coding
+3. **Probability Propagation**
+   - Always call propagateProbabilities() after edits
+   - Interventions use applyIntervention() (descendants only)
+
+4. **Child Node Probabilities**
+   - Never set directly - computed from parents
+   - Import handler must call propagateProbabilities()
+
+5. **History Skip Flag**
+   - Set skipHistoryRef.current = true before undo/redo
+   - Prevents adding history entry during state restoration
 
 ---
 
-## Next Session - What to Do
+## Testing Checklist
 
-1. **Start Session:**
-   - Read this SESSION_STATE.md (you are here!)
-   - Check `git status` for any uncommitted changes
-   - Check `git log --oneline -5` to see latest work
-   - Ask user what feature they want next
+When implementing features, verify:
+- [ ] Nodes can be added with all templates
+- [ ] Edges can be created with all types
+- [ ] Probability propagation works correctly
+- [ ] Undo/redo works for all operations
+- [ ] Multi-select and bulk operations work
+- [ ] Import/export preserves all data
+- [ ] Child nodes show computed probabilities (disabled editing)
+- [ ] Interventions still function
+- [ ] CPT still works
+- [ ] Query modal works for both modes
+- [ ] No console errors
+- [ ] HMR updates without refresh
 
-2. **During Session:**
+---
+
+## Next Session - Quick Start
+
+1. **Context Load:**
+   - Read this SESSION_STATE.md (you're doing it!)
+   - Check `git status` for uncommitted changes
+   - Review `git log --oneline -5`
+
+2. **During Work:**
    - Implement requested features
-   - Commit frequently with good messages
-   - Update development_log.md with major changes
-   - Test via HMR as you go
+   - Commit with detailed messages
+   - Update development_log.md
+   - Test via HMR
 
-3. **End Session:**
-   - Update this SESSION_STATE.md with:
-     - New features completed
-     - New commits
-     - Current status
-     - Updated "Last Updated" timestamp
-   - Make sure everything is committed
-   - Update "Suggested Next Features" if priorities changed
+3. **Session End:**
+   - Update this file with new features/commits
+   - Ensure all changes committed
+   - Update "Last Updated" timestamp
+   - Don't push to remote (user handles manually)
 
 ---
 
-## Key Decisions & Rationale
+## Key Design Decisions
 
-**Why React Flow?**
-- Built for React, not imperative like D3
-- Handles drag/zoom/pan out of the box
-- Custom node/edge components
-- Good performance
+**Why React Flow?** Built for React, handles drag/zoom/pan, custom components
 
-**Why noisy-OR model?**
-- Appropriate for argument mapping
-- Multiple independent causes
-- Simpler than full CPT for basic cases
-- CPT available when needed
+**Why Noisy-OR?** Appropriate for argument mapping, multiple independent causes
 
-**Why top-to-bottom layout?**
-- Matches handle positions (top = input, bottom = output)
-- Standard for Bayesian networks
-- Natural causal flow (causes → effects)
+**Why Top-to-Bottom?** Matches handle positions, standard for Bayesian networks
 
-**Why template system?**
-- Semantic meaning in argument maps
-- Visual distinction between node types
-- Quick node creation with sensible defaults
-- Extensible for new types
+**Why Template System?** Semantic meaning, visual distinction, quick creation
 
-**Why configuration-based templates?**
-- Easy to add new templates without code changes
-- Centralized in one file
-- UI automatically updates
-- Consistent pattern
+**Why Exact Inference?** Accurate probabilities for reasoning, practical for small networks
+
+**Why True/False Evidence?** Simpler UX than numeric probabilities, matches binary states
+
+**Why Auto-Compute Child Probs?** Semantically correct Bayesian networks
 
 ---
 
-**End of Session State Document**
+**Status:** All features working, committed locally, ready for next session ✅
 
-*This file should be updated at the end of each development session with new features, commits, and context.*
+**Dev Server:** Should be running with npm run dev
+**Documentation:** dev_notes/development_log.md has full session history
+**Test Cases:** test_cases/ directory has networks and test scenarios
+
+---
+
+*This file updated at the end of each session. Next session: Load this file for instant context!*
